@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0c0d10">
+<meta name="author" content="Alexandru-Ionuț Chiuță (Alexio)">
+<meta name="description" content="Atlas al jocului de dame: variante regionale, istorice, ortogonale si moderne. Toate variantele jucabile local impotriva unui AI didactic, prin patru motoare. 100% offline, zero dependente. Atelier Atlantykron - Centrul StrING.">
+<meta property="og:title" content="Dame fara frontiere - Atlas variante de dame">
+<meta property="og:description" content="Variante de dame din toata lumea, jucabile local impotriva unui AI didactic. 100% offline.">
+<meta property="og:locale" content="ro_RO">
+<meta property="og:type" content="website">
+<title>Dame fără frontiere — Atlas variante de dame</title>
+<style>
+:root{
+  --ink:#0c0d10; --panel:#15171c; --panel2:#1b1e25; --line:rgba(255,255,255,.085);
+  --line2:rgba(255,255,255,.16); --text:#e9e7df; --muted:#9aa0a8; --soft:#c6c3b8;
+  --gold:#d8b25e; --gold2:#b9933f; --accent:#86b3a8; --accent2:#5e958a; --red:#c4604f;
+  --sq-d:#2a2620; --sq-l:#3b3730; --sel:#cf9b46;
+  --piece-w:#ece6d6; --piece-w2:#c9c1ad; --piece-b2:#0f1115;
+  --radius:14px; --maxw:1180px;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif;
+  --sans:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+[data-theme="light"]{
+  --ink:#ece4d3; --panel:#fbf7ec; --panel2:#f4eddd; --line:rgba(30,24,12,.13);
+  --line2:rgba(30,24,12,.28); --text:#1c1a14; --muted:#6c6657; --soft:#4a4538;
+  --gold:#9a7320; --gold2:#7d5d18; --accent:#2f6f63; --accent2:#235349; --red:#a8412f;
+  --sq-d:#b58a58; --sq-l:#ead9b6; --sel:#a8771c;
+  --piece-w:#fbf6ea; --piece-w2:#d8cdb4; --piece-b2:#15110a;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ink); color:var(--text); font-family:var(--sans);
+  line-height:1.55; -webkit-font-smoothing:antialiased; overflow-x:clip; overflow-wrap:break-word;
+  -webkit-tap-highlight-color:transparent;
+  background-image:
+    radial-gradient(1100px 560px at 82% -8%, rgba(216,178,94,.06), transparent 60%),
+    radial-gradient(820px 460px at -8% 8%, rgba(134,179,168,.05), transparent 60%);
+  background-attachment:fixed;
+}
+body.readable{letter-spacing:.025em; line-height:1.75}
+body.ts1{font-size:18.5px}
+body.ts2{font-size:21px}
+::selection{background:var(--gold);color:#000}
+a{color:var(--accent);text-underline-offset:3px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 18px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;position:fixed;z-index:99;background:var(--gold);color:#000;padding:8px 12px;border-radius:8px}
+.serif{font-family:var(--serif)}
+.kick{font-family:var(--serif);font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);opacity:.95}
+
+/* header */
+header.site{padding:42px 0 20px;border-bottom:1px solid var(--line);position:relative}
+header.site h1{font-family:var(--serif);font-weight:600;letter-spacing:.005em;line-height:.98;
+  margin:.28em 0 .14em;font-size:clamp(2.5rem,8vw,4.6rem);overflow-wrap:break-word}
+header.site h1 .amp{color:var(--gold)}
+.sub{font-family:var(--serif);font-style:italic;color:var(--soft);font-size:clamp(1rem,2.6vw,1.28rem);max-width:62ch}
+.metaline{margin-top:10px;color:var(--muted);font-size:.9rem}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:84px}
+.stat b{font-family:var(--serif);font-size:1.5rem;display:block;line-height:1}
+.stat span{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* toolbar */
+.toolbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--ink) 88%,transparent);
+  backdrop-filter:blur(9px);border-bottom:1px solid var(--line);padding:12px 0;margin-bottom:8px}
+.trow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.trow>*{min-width:0}
+button,select,input,a{touch-action:manipulation}
+.search{flex:1 1 230px;display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line2);
+  border-radius:11px;padding:9px 12px}
+.search input{flex:1;background:none;border:0;color:var(--text);font:inherit;outline:none;min-width:60px}
+.search .k{font-size:.72rem;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+select.sel,button.btn{font:inherit;color:var(--text);background:var(--panel);border:1px solid var(--line2);
+  border-radius:11px;padding:9px 13px;cursor:pointer}
+button.btn:hover,select.sel:hover{border-color:var(--gold)}
+button.btn.gold{border-color:var(--gold2)}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.chip{font:inherit;font-size:.86rem;color:var(--soft);background:transparent;border:1px solid var(--line2);
+  border-radius:999px;padding:6px 13px;cursor:pointer;transition:.15s}
+.chip:hover{color:var(--text);border-color:var(--gold)}
+.chip[aria-pressed="true"],.chip.on{background:var(--gold);color:#1a1306;border-color:var(--gold);font-weight:600}
+.chip.tgl[aria-pressed="true"]{background:var(--accent);color:#06140f;border-color:var(--accent)}
+
+/* sections */
+section.block{padding:26px 0 6px}
+.shead{display:flex;align-items:baseline;gap:10px 14px;margin-bottom:14px;flex-wrap:wrap}
+.shead h2{font-family:var(--serif);font-weight:600;font-size:1.5rem;margin:0;white-space:nowrap}
+.shead .ln{flex:1;height:1px;background:var(--line)}
+.shead .note{color:var(--muted);font-size:.84rem;white-space:nowrap}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:14px;padding-bottom:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:14px;padding-bottom:8px}
+#today{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:14px}
+
+/* card */
+.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
+  border-radius:var(--radius);padding:15px 16px 14px;cursor:pointer;position:relative;
+  transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;display:flex;flex-direction:column;gap:9px;text-align:left}
+.card:hover{transform:translateY(-3px);border-color:var(--line2);box-shadow:0 12px 30px rgba(0,0,0,.28)}
+.card:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.card h3{font-family:var(--serif);font-weight:600;font-size:1.16rem;margin:0;line-height:1.12}
+.card .aka{color:var(--muted);font-size:.78rem;margin-top:2px;font-style:italic}
+.card-blurb{color:var(--soft);font-size:.9rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.tag{font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);border-radius:7px;padding:2px 7px}
+.badge{font-size:.7rem;font-weight:700;letter-spacing:.03em;border-radius:7px;padding:2px 7px;display:inline-flex;align-items:center;gap:4px}
+.badge.play{background:rgba(216,178,94,.16);color:var(--gold);border:1px solid var(--gold2)}
+.badge.approx{background:rgba(196,96,79,.14);color:var(--red);border:1px solid rgba(196,96,79,.5)}
+.badge.lex{background:rgba(134,179,168,.14);color:var(--accent);border:1px solid var(--accent2)}
+.dots{display:inline-flex;gap:3px;align-items:center}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--line2);display:inline-block}
+.dots i.on{background:var(--gold)}
+.empty{color:var(--muted);text-align:center;padding:40px;font-style:italic;font-family:var(--serif)}
+
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(6,7,9,.74);backdrop-filter:blur(4px);z-index:60;
+  display:none;align-items:flex-start;justify-content:center;padding:24px 14px;overflow-y:auto;overflow-x:hidden}
+.overlay.open{display:flex}
+.dialog{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line2);
+  border-radius:18px;max-width:920px;width:100%;padding:22px;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.dialog.play{max-width:680px}
+.x{position:absolute;right:14px;top:12px;width:34px;height:34px;border-radius:9px;border:1px solid var(--line2);
+  background:var(--panel);color:var(--text);font-size:1.1rem;cursor:pointer}
+.x:hover{border-color:var(--gold)}
+.v-head{padding-right:40px}
+.v-head h2{font-family:var(--serif);font-size:1.9rem;margin:.1em 0 .1em;line-height:1.03}
+.v-aka{color:var(--muted);font-style:italic;font-size:.92rem}
+.v-meta{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.v-blurb{color:var(--soft);margin:8px 0 14px;font-size:1.02rem}
+.v-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:640px){.v-grid{grid-template-columns:1fr}}
+.v-box h4{font-family:var(--serif);font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 8px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.v-rules{margin:0;padding:0;list-style:none}
+.v-rules li{padding:5px 0 5px 18px;position:relative;color:var(--soft);font-size:.93rem;border-bottom:1px dashed var(--line)}
+.v-rules li:before{content:"◦";position:absolute;left:2px;color:var(--gold)}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.92rem}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0;color:var(--soft)}
+.sim{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.sim button{font:inherit;font-size:.82rem;color:var(--accent);background:transparent;border:1px solid var(--accent2);border-radius:999px;padding:4px 11px;cursor:pointer}
+.sim button:hover{background:var(--accent);color:#06140f}
+.playbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.bigplay{font:inherit;font-weight:700;background:var(--gold);color:#1a1306;border:0;border-radius:12px;padding:12px 22px;cursor:pointer;font-size:1.02rem}
+.bigplay:hover{background:var(--gold2)}
+.bigplay[disabled]{opacity:.4;cursor:not-allowed}
+.docnote{color:var(--muted);font-size:.86rem;font-style:italic}
+
+/* play */
+.pwrap{display:grid;grid-template-columns:1fr;gap:14px}
+.boardwrap{display:flex;justify-content:center}
+.board{display:grid;grid-template-columns:repeat(var(--n,8),1fr);width:100%;max-width:540px;margin-inline:auto;aspect-ratio:1;
+  border:7px solid #1d1a14;border-radius:8px;overflow:hidden;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+[data-theme="light"] .board{border-color:#5a4424}
+.sq{position:relative;aspect-ratio:1;border:0;margin:0;padding:0;cursor:pointer;background:var(--sq-l);touch-action:manipulation}
+.sq.d{background:var(--sq-d)}
+.sq.off{cursor:default}
+.sq.last:before{content:"";position:absolute;inset:0;background:rgba(216,178,94,.22)}
+.sq.sel{box-shadow:inset 0 0 0 3px var(--sel);z-index:2}
+.sq.cap{box-shadow:inset 0 0 0 3px var(--red);z-index:2}
+.sq .dot{position:absolute;left:50%;top:50%;width:28%;height:28%;transform:translate(-50%,-50%);border-radius:50%;
+  background:rgba(134,179,168,.6);display:none}
+.sq.move .dot{display:block}
+.pc{position:absolute;inset:12%;border-radius:50%;
+  box-shadow:0 2px 4px rgba(0,0,0,.45),inset 0 2px 3px rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.35);z-index:1}
+.pc.w{background:radial-gradient(circle at 38% 30%,var(--piece-w),var(--piece-w2));border:1px solid rgba(0,0,0,.28)}
+.pc.b{background:radial-gradient(circle at 38% 30%,#3b424b,var(--piece-b2));border:1px solid rgba(0,0,0,.55)}
+.pc.king{box-shadow:0 2px 4px rgba(0,0,0,.45),inset 0 0 0 2px var(--gold),inset 0 2px 3px rgba(255,255,255,.22)}
+.pc.king:after{content:"✦";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--gold);font-size:52%;text-shadow:0 1px 1px rgba(0,0,0,.5)}
+.pc .g{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-style:normal;
+  font-weight:800;font-size:46%;line-height:1;z-index:2;text-shadow:0 1px 1px rgba(0,0,0,.45)}
+.pc.w .g{color:#241a0a}.pc.b .g{color:#f3f0e8}
+.pc.lbl.king:after{display:none}
+.pc.stack{box-shadow:0 2px 4px rgba(0,0,0,.5),inset 0 0 0 2px rgba(255,255,255,.5),0 0 0 2px rgba(0,0,0,.35),0 4px 0 -1px rgba(0,0,0,.4),0 6px 0 -2px rgba(0,0,0,.3)}
+.sq .op{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:34%;font-weight:700;color:rgba(255,255,255,.30);z-index:0;pointer-events:none}
+.board.k-damath .sq.l .op{color:rgba(0,0,0,.30)}
+.pctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.seg button{font:inherit;font-size:.85rem;background:var(--panel);color:var(--soft);border:0;padding:7px 12px;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--gold);color:#1a1306;font-weight:700}
+.miniseg{font-size:.8rem}
+.pstatus{text-align:center;font-family:var(--serif);font-size:1.06rem;min-height:1.4em}
+.pmeta{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 10px;color:var(--muted);font-size:.84rem}
+.turnchip{width:14px;height:14px;border-radius:50%;display:inline-block;border:1px solid var(--line2);vertical-align:-2px}
+.turnchip.w{background:var(--piece-w)}.turnchip.b{background:#2b3038}.turnchip.over{background:var(--gold)}
+.movelist{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;color:var(--soft);
+  background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;max-height:120px;overflow-y:auto;overflow-x:hidden;word-break:break-word;line-height:1.7}
+.movelist .mv{display:inline-block;margin-right:10px}
+.movelist .no{color:var(--muted)}
+
+footer.site{border-top:1px solid var(--line);margin-top:46px;padding:30px 0 50px;color:var(--muted);font-size:.88rem}
+footer.site .ftitle{font-family:var(--serif);color:var(--text);font-size:1.05rem}
+footer.site .fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.quote{font-family:var(--serif);font-style:italic;color:var(--soft);font-size:1.04rem;margin:8px 0 18px;max-width:60ch}
+
+@media (max-width:560px){
+  .wrap{padding:0 14px}
+  header.site{padding:30px 0 16px}
+  .toolbar{position:static;backdrop-filter:none}
+  .trow{gap:8px}
+  .btn,select.sel{padding:11px 13px;font-size:.95rem}
+  .chip{padding:9px 13px;font-size:.92rem}
+  .search{padding:11px 13px}
+  .seg button{padding:11px 14px;font-size:.9rem}
+  .shead .note{display:none}
+  .shead h2{font-size:1.3rem;white-space:normal}
+  .grid,.shelf,#today{grid-template-columns:1fr}
+  .stat{flex:1 1 28%;min-width:0}
+  .stat b{font-size:1.3rem}
+  .overlay{padding:10px 8px;align-items:flex-start}
+  .dialog{padding:16px 14px;border-radius:14px}
+  .overlay .x{position:fixed;right:12px;top:12px;width:42px;height:42px;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+  .v-head h2{font-size:1.5rem}
+  .v-grid{grid-template-columns:1fr;gap:14px}
+  .bigplay{width:100%;text-align:center}
+  .pwrap{gap:12px}
+  .pctrl{gap:8px}
+  .board{border-width:5px;max-width:min(540px,94vw)}
+  .sq .dot{width:34%;height:34%}
+  footer.site{padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Sari la conținut</a>
+
+<header class="site">
+  <div class="wrap">
+    <div class="kick">♛ Atlas · Atelier Atlantykron · Centrul StrING</div>
+    <h1>Dame fără <span class="amp">frontiere</span></h1>
+    <p class="sub">Nu există <em>un</em> joc de dame, ci o familie întreagă — regională, istorică, ortogonală, fantastică. O hartă a felurilor în care omul a codificat același conflict simplu pe 64, 100 sau 144 de pătrate.</p>
+    <div class="metaline" id="metaline">100% offline · 0 resurse externe · cod liber pentru uz educațional</div>
+    <div class="stats" id="stats"></div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <div class="trow">
+      <label class="search">
+        <span aria-hidden="true">⚲</span>
+        <input id="q" type="search" placeholder="Caută variantă, regiune, regulă…" aria-label="Caută">
+        <span class="k">/</span>
+      </label>
+      <select id="sort" class="sel" aria-label="Ordonează">
+        <option value="id">Ordine recomandată</option>
+        <option value="az">Titlu A→Z</option>
+        <option value="za">Titlu Z→A</option>
+        <option value="du">Dificultate ↑</option>
+        <option value="dd">Dificultate ↓</option>
+      </select>
+      <button class="btn" id="randbtn" title="Surprinde-mă (R)">⚄ Surprinde-mă</button>
+      <button class="btn" id="themebtn" title="Comută tema (T)">☾ Temă</button>
+      <button class="btn" id="tsbtn" title="Mărime text (A)">A↕</button>
+      <button class="btn" id="readbtn" title="Mod lizibil">lizibil</button>
+      <button class="btn" id="helpbtn" title="Ajutor (?)">?</button>
+    </div>
+    <div class="chips" id="famchips"></div>
+    <div class="chips">
+      <button class="chip tgl" id="onlyplay" aria-pressed="false">🎮 Doar jucabile</button>
+      <button class="chip tgl" id="onlybeg" aria-pressed="false">♟ Începători</button>
+    </div>
+  </div>
+</div>
+
+<main id="main" class="wrap">
+  <section class="block" id="todaywrap">
+    <div class="shead"><h2>✨ Varianta de astăzi</h2><span class="ln"></span><span class="note">aleasă determinist după dată</span></div>
+    <div id="today"></div>
+  </section>
+
+  <section class="block">
+    <div class="shead"><h2>♛ Esențiale</h2><span class="ln"></span><span class="note">de unde să începi</span></div>
+    <div class="shelf" id="shelf-ess"></div>
+  </section>
+
+  <section class="block">
+    <div class="shead"><h2>🌍 Exotice & ortogonale</h2><span class="ln"></span><span class="note">geometrii care rescriu intuiția</span></div>
+    <div class="shelf" id="shelf-exo"></div>
+  </section>
+
+  <section class="block">
+    <div class="shead"><h2 id="allhead">Toate intrările</h2><span class="ln"></span><span class="note" id="count"></span></div>
+    <div class="grid" id="cards"></div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p class="quote">„Limitele jocului sunt limitele imaginației tale — nu ale tablei."</p>
+    <div class="ftitle">Dame fără frontiere</div>
+    <div>Atelier · Alexandru-Ionuț Chiuță (Alexio) · Atlantykron · Centrul StrING · CC-BY-SA 4.0</div>
+    <div id="explored" style="margin-top:8px"></div>
+    <div class="fbtns">
+      <button class="btn" id="csvbtn">⤓ Export CSV</button>
+      <button class="btn" id="bibbtn">⤓ Citează (BibTeX)</button>
+      <button class="btn" id="aboutbtn">Despre acest atlas →</button>
+    </div>
+    <p style="margin-top:14px;font-size:.82rem">Motoare didactice (~1500–2000 ELO echivalent), nu pentru analiză profesionistă. ⚠ marchează variantele unde implementarea e o aproximare onestă a specificației originale.</p>
+  </div>
+</footer>
+
+<!-- variant modal -->
+<div class="overlay" id="vmodal" role="dialog" aria-modal="true" aria-labelledby="vtitle">
+  <div class="dialog">
+    <button class="x" data-close aria-label="Închide">✕</button>
+    <div class="v-head">
+      <div class="kick" id="vfam">Variantă</div>
+      <h2 id="vtitle" class="serif"></h2>
+      <div class="v-aka" id="vaka"></div>
+    </div>
+    <div class="v-meta" id="vmeta"></div>
+    <p class="v-blurb" id="vblurb"></p>
+    <div class="v-grid">
+      <div class="v-box">
+        <h4>Reguli cheie</h4>
+        <ul class="v-rules" id="vrules"></ul>
+      </div>
+      <div class="v-box">
+        <h4>Date rapide</h4>
+        <dl class="facts" id="vfacts"></dl>
+        <h4 style="margin-top:16px">Înrudite</h4>
+        <div class="sim" id="vsim"></div>
+      </div>
+    </div>
+    <div class="playbar" id="vplaybar"></div>
+  </div>
+</div>
+
+<!-- play modal -->
+<div class="overlay" id="pmodal" role="dialog" aria-modal="true" aria-labelledby="ptitle">
+  <div class="dialog play">
+    <button class="x" data-close aria-label="Închide">✕</button>
+    <div class="v-head" style="padding-right:40px">
+      <div class="kick">▶ Joacă local · vs AI</div>
+      <h2 id="ptitle" class="serif" style="font-size:1.5rem;margin:.1em 0"></h2>
+    </div>
+    <div class="pwrap">
+      <div class="pctrl">
+        <span style="color:var(--muted);font-size:.82rem">Joci cu:</span>
+        <div class="seg" id="sideseg">
+          <button data-side="w" aria-pressed="true">Albe</button>
+          <button data-side="b" aria-pressed="false">Negre</button>
+        </div>
+        <span style="color:var(--muted);font-size:.82rem">Nivel:</span>
+        <div class="seg miniseg" id="levelseg">
+          <button data-lvl="1" aria-pressed="false">Ușor</button>
+          <button data-lvl="2" aria-pressed="true">Mediu</button>
+          <button data-lvl="3" aria-pressed="false">Avansat</button>
+        </div>
+      </div>
+      <div class="pstatus" id="pstatus"></div>
+      <div class="boardwrap"><div class="board" id="board"></div></div>
+      <div class="pmeta">
+        <span><span class="turnchip" id="pturn"></span> <span id="pcount"></span></span>
+        <span id="ruleshort"></span>
+      </div>
+      <div class="pctrl">
+        <button class="btn" id="newbtn">↺ Joc nou</button>
+        <button class="btn" id="undobtn">↶ Anulează</button>
+        <button class="btn" id="hintbtn">💡 Indiciu</button>
+        <button class="chip tgl" id="relaxbtn" aria-pressed="false">Mod relaxat (captură neobligatorie)</button>
+      </div>
+      <div class="movelist" id="movelist" aria-label="Lista mutărilor"></div>
+    </div>
+  </div>
+</div>
+
+<!-- help modal -->
+<div class="overlay" id="hmodal" role="dialog" aria-modal="true" aria-labelledby="htitle">
+  <div class="dialog">
+    <button class="x" data-close aria-label="Închide">✕</button>
+    <h2 id="htitle" class="serif">Cum funcționează</h2>
+    <p class="v-blurb">Răsfoiește variantele, deschide o fișă, apoi apasă <b>▶ Joacă</b> dacă are motor. Pe tablă: apasă o piesă, apoi un pătrat evidențiat. La capturi multiple, continuă să apeși pătratele — secvența se aplică singură când e completă. Captura e obligatorie (poți relaxa această regulă pentru joc cu copiii).</p>
+    <div class="v-grid">
+      <div class="v-box">
+        <h4>Scurtături</h4>
+        <dl class="facts">
+          <dt>/</dt><dd>focalizează căutarea</dd>
+          <dt>R</dt><dd>variantă aleatoare</dd>
+          <dt>B</dt><dd>filtru începători</dd>
+          <dt>T</dt><dd>comută tema</dd>
+          <dt>A</dt><dd>mărime text</dd>
+          <dt>Esc</dt><dd>închide fereastra</dd>
+        </dl>
+      </div>
+      <div class="v-box">
+        <h4>Despre motor</h4>
+        <p style="color:var(--soft);font-size:.92rem;margin:0">Patru motoare locale acoperă toate variantele: (1) un motor generic parametrizat (mărime tablă, captură înainte/înapoi, damă zburătoare, captură maximă/ponderată, promovare „stop/final/continuă", geometrie diagonală/ortogonală/hibridă); (2) un motor de turnuri pentru Bașni & Lasca (piesele capturate se îngroapă sub turn); (3) un strat de scor aritmetic pentru Damath; (4) un motor hibrid șah×dame pentru Cheskers. Toate rulează 100% local prin căutare alpha-beta cu adâncire iterativă; nicio cerere de rețea, niciun cont, niciun tracking.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- about modal -->
+<div class="overlay" id="amodal" role="dialog" aria-modal="true" aria-labelledby="atitle">
+  <div class="dialog">
+    <button class="x" data-close aria-label="Închide">✕</button>
+    <h2 id="atitle" class="serif">Despre acest atlas</h2>
+    <p class="v-blurb">Companion al proiectului „Șah fără frontiere", construit în aceeași filozofie: <b>un singur fișier HTML</b>, fără dependențe la rulare, offline, fără reclame, fără tracking. Codul e liber pentru uz educațional.</p>
+    <div class="v-box">
+      <h4>Teza</h4>
+      <p style="color:var(--soft);margin:.2em 0 1em">Dama pare un joc unic, dar e zeci de jocuri. International (10×10) și englezul (8×8) diferă profund; turcescul renunță la diagonale; Lasca și Bașni nu scot piesele, ci le suprapun în turnuri. Studiind formele — istorice, regionale, fantastice — vezi cât de plastic e jocul ca mediu.</p>
+      <h4>Onestitate</h4>
+      <p style="color:var(--soft);margin:.2em 0 1em">Toate variantele au motor jucabil. Disclaimerul ⚠ marchează implementările aproximative: frizonă/armenească (direcții hibride), Dameo/Croda (fără mișcarea liniară a șirurilor), Bașni/Lasca (regulă „nu sări de două ori același turn"), Damath (schemă de numere/operatori standardizată local), Cheskers (reconstrucție a regulilor Golomb 1948), plus prioritățile de curte la italiană/cehă/spaniolă/română. Pentru analiză serioasă: KingsRow (checkers), Scan (internațional), Maximus (Turcia).</p>
+      <h4>Autor</h4>
+      <p style="color:var(--soft);margin:.2em 0 0">Alexandru-Ionuț Chiuță (Alexio) — autor, dezvoltator, muzician. Proiect TROM · Editura Tornada · ASFAN-România · Centrul StrING.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DAME FĂRĂ FRONTIERE — motor generic de dame
+   Single source of truth. Funcționează în Node și în browser.
+   Board: Array(size*size); cell = null | {c:'w'|'b', k:bool}
+   index(r,c)=r*size+c. Rândul 0 = sus (negru), rândul size-1 = jos (alb).
+   Albul urcă (dr=-1), promovează la r=0. Negrul coboară, promovează la r=size-1.
+   ============================================================ */
+(function (root) {
+  'use strict';
+
+  var DIAG = [[-1,-1],[-1,1],[1,-1],[1,1]];
+  var ORTH = [[-1,0],[1,0],[0,-1],[0,1]];
+
+  function now(){ return (typeof performance!=='undefined'&&performance.now)?performance.now():Date.now(); }
+  function other(c){ return c==='w'?'b':'w'; }
+  function inB(r,c,N){ return r>=0&&r<N&&c>=0&&c<N; }
+  function isPromoRow(sq,color,N){ var r=(sq/N)|0; return color==='w'?r===0:r===N-1; }
+
+  // Fill defaults onto a rules object
+  function normRules(r){
+    var g=r.geometry||'diag';
+    return {
+      size: r.size,
+      geometry: g,
+      start: r.start || (g==='orth' ? 'orthRows' : 'standard'),
+      diagMen:     r.diagMen!==undefined     ? r.diagMen     : (g!=='orth'),
+      orthMen:     r.orthMen!==undefined     ? r.orthMen     : (g==='orth'),
+      menMoveDiag: r.menMoveDiag!==undefined ? r.menMoveDiag : (g!=='orth'),
+      menMoveOrth: r.menMoveOrth!==undefined ? r.menMoveOrth : (g==='orth'),
+      menCaptureBackward: !!r.menCaptureBackward,            // diagonal backward
+      menOrthBackward: r.menOrthBackward!==undefined ? r.menOrthBackward : false,
+      kingDiag:    r.kingDiag!==undefined    ? r.kingDiag    : (g!=='orth'),
+      kingOrth:    r.kingOrth!==undefined    ? r.kingOrth    : (g==='orth'),
+      flyingKings: !!r.flyingKings,
+      maxCapture: !!r.maxCapture,
+      weightedMax: r.weightedMax||0,                        // 0 = off; else king weight
+      menCanCaptureKing: r.menCanCaptureKing!==false,
+      promotion: r.promotion||'stop',      // 'stop' | 'final' | 'continue'
+      kingPriority: !!r.kingPriority,
+      captureMandatory: r.captureMandatory!==false,
+      giveaway: !!r.giveaway
+    };
+  }
+
+  function initialBoard(rules){
+    var N=rules.size, b=new Array(N*N).fill(null), r,c;
+    if(rules.start==='orthRows'){
+      for(c=0;c<N;c++){
+        b[1*N+c]={c:'b',k:false}; b[2*N+c]={c:'b',k:false};
+        b[(N-2)*N+c]={c:'w',k:false}; b[(N-3)*N+c]={c:'w',k:false};
+      }
+      return b;
+    }
+    if(rules.start==='diagonal'){
+      for(r=0;r<N;r++) for(c=0;c<N;c++){
+        if(((r+c)&1)===1){
+          if(c<3) b[r*N+c]={c:'b',k:false};
+          else if(c>=N-3) b[r*N+c]={c:'w',k:false};
+        }
+      }
+      return b;
+    }
+    var rows = N===8?3 : (N===10?4 : (N===12?5 : Math.floor(N/2)-1));
+    for(r=0;r<N;r++) for(c=0;c<N;c++){
+      if(((r+c)&1)===1){
+        if(r<rows) b[r*N+c]={c:'b',k:false};
+        else if(r>=N-rows) b[r*N+c]={c:'w',k:false};
+      }
+    }
+    return b;
+  }
+
+  function dfwd(c){ return c==='w'?[[-1,-1],[-1,1]]:[[1,-1],[1,1]]; }
+  function dback(c){ return c==='w'?[[1,-1],[1,1]]:[[-1,-1],[-1,1]]; }
+  function ofwd(c){ return c==='w'?[[-1,0],[0,-1],[0,1]]:[[1,0],[0,-1],[0,1]]; }
+  function oback(c){ return c==='w'?[[1,0]]:[[-1,0]]; }
+  function forwardDirs(color, rules){          // MOVE directions for a man
+    var d=[];
+    if(rules.menMoveDiag) d=d.concat(dfwd(color));
+    if(rules.menMoveOrth) d=d.concat(ofwd(color));
+    return d;
+  }
+  function manCaptureDirs(color, rules){       // CAPTURE directions for a man
+    var d=[];
+    if(rules.diagMen){ d=d.concat(dfwd(color)); if(rules.menCaptureBackward) d=d.concat(dback(color)); }
+    if(rules.orthMen){ d=d.concat(ofwd(color)); if(rules.menOrthBackward) d=d.concat(oback(color)); }
+    return d;
+  }
+  function kingDirs(rules){
+    var d=[];
+    if(rules.kingDiag) d=d.concat(DIAG);
+    if(rules.kingOrth) d=d.concat(ORTH);
+    return d;
+  }
+
+  function genQuiet(b, rules, color){
+    var N=rules.size, moves=[], i, p, r, c, d, dirs, nr, nc, j;
+    for(i=0;i<b.length;i++){ p=b[i]; if(!p||p.c!==color) continue;
+      r=(i/N)|0; c=i%N;
+      if(!p.k){
+        dirs=forwardDirs(color,rules);
+        for(d=0;d<dirs.length;d++){ nr=r+dirs[d][0]; nc=c+dirs[d][1];
+          if(!inB(nr,nc,N))continue; j=nr*N+nc; if(b[j]==null) moves.push({path:[i,j],caps:[],king:false}); }
+      } else {
+        dirs=kingDirs(rules);
+        if(rules.flyingKings){
+          for(d=0;d<dirs.length;d++){ nr=r+dirs[d][0]; nc=c+dirs[d][1];
+            while(inB(nr,nc,N)&&b[nr*N+nc]==null){ moves.push({path:[i,nr*N+nc],caps:[],king:true}); nr+=dirs[d][0]; nc+=dirs[d][1]; } }
+        } else {
+          for(d=0;d<dirs.length;d++){ nr=r+dirs[d][0]; nc=c+dirs[d][1];
+            if(!inB(nr,nc,N))continue; j=nr*N+nc; if(b[j]==null) moves.push({path:[i,j],caps:[],king:true}); }
+        }
+      }
+    }
+    return moves;
+  }
+
+  function captureFrom(work, rules, piece, startSq, curSq, capturedSet, pathTail, results, N){
+    var r=(curSq/N)|0, c=curSq%N, extended=false, d, dirs, dr, dc, mr, mc, mid, lr, lc, land, t, ns, np, nr, nc;
+    if(!piece.k){
+      dirs=manCaptureDirs(piece.c, rules);
+      for(d=0;d<dirs.length;d++){ dr=dirs[d][0]; dc=dirs[d][1];
+        mr=r+dr; mc=c+dc; if(!inB(mr,mc,N))continue; mid=mr*N+mc;
+        lr=r+2*dr; lc=c+2*dc; if(!inB(lr,lc,N))continue; land=lr*N+lc;
+        t=work[mid];
+        if(!t||t.c===piece.c) continue;
+        if(t.k && !rules.menCanCaptureKing) continue;
+        if(capturedSet.has(mid)) continue;
+        if(work[land]!=null) continue;
+        extended=true;
+        ns=new Set(capturedSet); ns.add(mid);
+        if(isPromoRow(land,piece.c,N) && rules.promotion==='stop'){
+          results.push({path:pathTail.concat([land]).slice(), caps:Array.from(ns), king:true, _start:startSq});
+          continue;
+        }
+        np={c:piece.c,k:piece.k};
+        if(isPromoRow(land,piece.c,N) && rules.promotion==='continue') np.k=true;
+        captureFrom(work, rules, np, startSq, land, ns, pathTail.concat([land]), results, N);
+      }
+    } else {
+      dirs=kingDirs(rules);
+      for(d=0;d<dirs.length;d++){ dr=dirs[d][0]; dc=dirs[d][1];
+        if(rules.flyingKings){
+          nr=r+dr; nc=c+dc;
+          while(inB(nr,nc,N)&&work[nr*N+nc]==null){ nr+=dr; nc+=dc; }
+          if(!inB(nr,nc,N)) continue;
+          mid=nr*N+nc; t=work[mid];
+          if(!t||t.c===piece.c||capturedSet.has(mid)) continue;
+          lr=nr+dr; lc=nc+dc;
+          while(inB(lr,lc,N)&&work[lr*N+lc]==null){
+            land=lr*N+lc; extended=true;
+            ns=new Set(capturedSet); ns.add(mid);
+            captureFrom(work, rules, {c:piece.c,k:true}, startSq, land, ns, pathTail.concat([land]), results, N);
+            lr+=dr; lc+=dc;
+          }
+        } else {
+          mr=r+dr; mc=c+dc; if(!inB(mr,mc,N))continue; mid=mr*N+mc;
+          lr=r+2*dr; lc=c+2*dc; if(!inB(lr,lc,N))continue; land=lr*N+lc;
+          t=work[mid];
+          if(!t||t.c===piece.c||capturedSet.has(mid)) continue;
+          if(work[land]!=null) continue;
+          extended=true;
+          ns=new Set(capturedSet); ns.add(mid);
+          captureFrom(work, rules, {c:piece.c,k:true}, startSq, land, ns, pathTail.concat([land]), results, N);
+        }
+      }
+    }
+    if(!extended && pathTail.length>0){
+      results.push({path:pathTail.slice(), caps:Array.from(capturedSet), king:piece.k, _start:startSq});
+    }
+  }
+
+  function genCaptures(b, rules, color){
+    var N=rules.size, results=[], i, p, work, raw=[];
+    for(i=0;i<b.length;i++){ p=b[i]; if(!p||p.c!==color) continue;
+      work=b.slice(); work[i]=null;
+      captureFrom(work, rules, {c:p.c,k:p.k}, i, i, new Set(), [], raw, N);
+    }
+    // raw entries have path = tail only; prepend start
+    for(i=0;i<raw.length;i++){
+      results.push({ path:[raw[i]._start].concat(raw[i].path), caps:raw[i].caps, king:raw[i].king });
+    }
+    return results;
+  }
+
+  function capValue(b, rules, m){ var v=0,i; for(i=0;i<m.caps.length;i++){ v += (b[m.caps[i]] && b[m.caps[i]].k) ? rules.weightedMax : 1; } return v; }
+
+  function genMoves(b, rules, color){
+    var caps=genCaptures(b, rules, color), mandatory=rules.captureMandatory!==false, mx, i, hasKingCap;
+    if(caps.length){
+      if(rules.weightedMax){ mx=0; for(i=0;i<caps.length;i++){ caps[i]._v=capValue(b,rules,caps[i]); if(caps[i]._v>mx) mx=caps[i]._v; }
+        caps=caps.filter(function(m){return m._v===mx;}); }
+      else if(rules.maxCapture){ mx=0; for(i=0;i<caps.length;i++) if(caps[i].caps.length>mx) mx=caps[i].caps.length;
+        caps=caps.filter(function(m){return m.caps.length===mx;}); }
+      if(rules.kingPriority){ hasKingCap=caps.some(function(m){var pc=b[m.path[0]];return pc&&pc.k;});
+        if(hasKingCap) caps=caps.filter(function(m){return b[m.path[0]].k;}); }
+    }
+    if(mandatory && caps.length) return caps;
+    var quiet=genQuiet(b, rules, color);
+    return caps.length ? caps.concat(quiet) : quiet;
+  }
+
+  function applyMove(b, rules, mv){
+    var N=rules.size, nb=b.slice(), from=mv.path[0], to=mv.path[mv.path.length-1], p, i;
+    p={c:nb[from].c,k:nb[from].k}; nb[from]=null;
+    for(i=0;i<mv.caps.length;i++) nb[mv.caps[i]]=null;
+    if(mv.king) p.k=true;
+    else if(!p.k && isPromoRow(to,p.c,N)) p.k=true;
+    nb[to]=p;
+    return nb;
+  }
+
+  function countPieces(b,color){ var n=0,i; for(i=0;i<b.length;i++) if(b[i]&&b[i].c===color)n++; return n; }
+
+  // Returns winner 'w'|'b' if the game is over for the side to move, else null.
+  function result(b, rules, toMove){
+    var moves=genMoves(b, rules, toMove);
+    if(moves.length===0){ return rules.giveaway ? toMove : other(toMove); }
+    return null;
+  }
+
+  function evaluate(b, rules, toMove){
+    var N=rules.size, manV=100, kingV=rules.flyingKings?300:165, score=0, i, p, r, c, v, adv, cen;
+    for(i=0;i<b.length;i++){ p=b[i]; if(!p)continue;
+      r=(i/N)|0; c=i%N; v=p.k?kingV:manV;
+      if(!p.k){ adv=(p.c==='w')?(N-1-r):r; v+=adv*4;
+        if((p.c==='w'&&r===N-1)||(p.c==='b'&&r===0)) v+=6; }
+      cen=(N/2)-Math.abs(c-(N-1)/2); v+=cen*1.2;
+      score += (p.c==='w'? v : -v);
+    }
+    var s = toMove==='w'? score : -score;
+    if(rules.giveaway) s=-s;
+    return s;
+  }
+
+  function search(b, rules, toMove, depth, alpha, beta, deadline){
+    var res=result(b,rules,toMove);
+    if(res!==null) return res===toMove ? (100000+depth) : (-100000-depth);
+    if(depth<=0) return evaluate(b,rules,toMove);
+    if(now()>deadline) return evaluate(b,rules,toMove);
+    var moves=genMoves(b,rules,toMove);
+    moves.sort(function(a,c){return c.caps.length-a.caps.length;});
+    var best=-Infinity, i, nb, val;
+    for(i=0;i<moves.length;i++){
+      nb=applyMove(b,rules,moves[i]);
+      val=-search(nb,rules,other(toMove),depth-1,-beta,-alpha,deadline);
+      if(val>best)best=val;
+      if(best>alpha)alpha=best;
+      if(alpha>=beta)break;
+    }
+    return best;
+  }
+
+  function bestMove(b, rules, toMove, level){
+    var moves=genMoves(b,rules,toMove);
+    if(moves.length===0)return null;
+    if(moves.length===1)return moves[0];
+    var timeBudget = level===1?120 : (level===2?500 : 1100);
+    var maxDepth   = level===1?2   : (level===2?6   : 12);
+    var deadline=now()+timeBudget, chosen=moves[0], chosenVal=-Infinity, d, ordered, i, nb, val, alpha, beta, localBest, localVal;
+    for(d=1; d<=maxDepth; d++){
+      localBest=null; localVal=-Infinity; alpha=-Infinity; beta=Infinity;
+      ordered=moves.slice().sort(function(a,c){return c.caps.length-a.caps.length;});
+      for(i=0;i<ordered.length;i++){
+        nb=applyMove(b,rules,ordered[i]);
+        val=-search(nb,rules,other(toMove),d-1,-beta,-alpha,deadline);
+        if(val>localVal){localVal=val;localBest=ordered[i];}
+        if(val>alpha)alpha=val;
+        if(now()>deadline)break;
+      }
+      if(localBest){chosen=localBest;chosenVal=localVal;}
+      if(now()>deadline)break;
+      if(chosenVal>90000)break;
+    }
+    if(level===1 && Math.random()<0.35) return moves[Math.floor(Math.random()*moves.length)];
+    return chosen;
+  }
+
+  function cell(b,sq){ var p=b[sq]; return p?{cls:p.c+(p.k?' king':''), glyph:''}:{empty:true}; }
+  var DAME = {
+    DIAG:DIAG, ORTH:ORTH, normRules:normRules, initialBoard:initialBoard,
+    genQuiet:genQuiet, genCaptures:genCaptures, genMoves:genMoves,
+    applyMove:applyMove, result:result, evaluate:evaluate, bestMove:bestMove,
+    countPieces:countPieces, other:other, isPromoRow:isPromoRow, inB:inB, cell:cell
+  };
+
+  if(typeof module!=='undefined' && module.exports) module.exports=DAME;
+  else root.DAME=DAME;
+})(typeof self!=='undefined'?self:this);
+
+</script>
+
+<script>
+/* ============================================================
+   DAME FĂRĂ FRONTIERE — motor de dame cu TURNURI (Bașni / Lasca)
+   Celula = stivă: Array de piese bottom→top, sau null. Vârful controlează.
+   Captura NU scoate piesa: îi ia VÂRFUL și îl pune la BAZA turnului care capturează.
+   ============================================================ */
+(function(root){
+  'use strict';
+  var DIAG=[[-1,-1],[-1,1],[1,-1],[1,1]];
+  function now(){ return (typeof performance!=='undefined'&&performance.now)?performance.now():Date.now(); }
+  function other(c){ return c==='w'?'b':'w'; }
+  function inB(r,c,N){ return r>=0&&r<N&&c>=0&&c<N; }
+  function top(s){ return (s&&s.length)?s[s.length-1]:null; }
+  function clone(p){ return {c:p.c,k:p.k}; }
+  function cloneStack(s){ return s?s.map(clone):null; }
+  function isPromoRow(sq,color,N){ var r=(sq/N)|0; return color==='w'?r===0:r===N-1; }
+  function dfwd(c){ return c==='w'?[[-1,-1],[-1,1]]:[[1,-1],[1,1]]; }
+
+  function normRules(r){
+    return {
+      size:r.size,
+      parity: r.parity!==undefined ? r.parity : (r.size%2?0:1),
+      flyingKings:!!r.flyingKings,
+      menCaptureBackward:!!r.menCaptureBackward,
+      promotion:r.promotion||'stop',   // 'stop' | 'continue'
+      captureMandatory:r.captureMandatory!==false
+    };
+  }
+  function initialBoard(rules){
+    var N=rules.size, b=new Array(N*N).fill(null), r,c;
+    var rows = N>=12?5 : (N>=10?4 : (N>=8?3 : (N>=7?3:2)));
+    for(r=0;r<N;r++) for(c=0;c<N;c++){
+      if(((r+c)&1)===rules.parity){
+        if(r<rows) b[r*N+c]=[{c:'b',k:false}];
+        else if(r>=N-rows) b[r*N+c]=[{c:'w',k:false}];
+      }
+    }
+    return b;
+  }
+
+  function manCapDirs(color,rules){ return rules.menCaptureBackward?DIAG:dfwd(color); }
+
+  function genQuiet(b, rules, color){
+    var N=rules.size, moves=[], i, s, tp, r, c, dirs, d, nr, nc, j, ns;
+    for(i=0;i<b.length;i++){ s=b[i]; tp=top(s); if(!tp||tp.c!==color) continue;
+      r=(i/N)|0; c=i%N;
+      if(!tp.k){
+        dirs=dfwd(color);
+        for(d=0;d<dirs.length;d++){ nr=r+dirs[d][0]; nc=c+dirs[d][1]; if(!inB(nr,nc,N))continue; j=nr*N+nc;
+          if(b[j]==null){ ns=cloneStack(s); if(isPromoRow(j,color,N)) ns[ns.length-1].k=true; moves.push({path:[i,j],caps:[],stack:ns}); } }
+      } else {
+        for(d=0;d<DIAG.length;d++){ nr=r+DIAG[d][0]; nc=c+DIAG[d][1];
+          if(rules.flyingKings){ while(inB(nr,nc,N)&&b[nr*N+nc]==null){ moves.push({path:[i,nr*N+nc],caps:[],stack:cloneStack(s)}); nr+=DIAG[d][0]; nc+=DIAG[d][1]; } }
+          else { if(inB(nr,nc,N)&&b[nr*N+nc]==null) moves.push({path:[i,nr*N+nc],caps:[],stack:cloneStack(s)}); }
+        }
+      }
+    }
+    return moves;
+  }
+
+  function capFrom(work, rules, moving, startSq, curSq, used, tail, results, N, color){
+    var r=(curSq/N)|0, c=curSq%N, extended=false, tp=moving[moving.length-1], dirs, d, dr, dc, mr, mc, mid, lr, lc, land, mt, nm, nw, nu, promo;
+    function step(mid, land){
+      // capture the enemy tower top at `mid`, land at `land`
+      var capturedTop = clone(top(work[mid]));
+      nm = moving.map(clone); nm.unshift(capturedTop);     // captured goes to the BOTTOM
+      promo=false;
+      if(isPromoRow(land,color,N) && !nm[nm.length-1].k){ nm[nm.length-1].k=true; promo=true; }
+      nw = work.slice();
+      var reduced = work[mid].slice(0,-1); nw[mid] = reduced.length?reduced:null;
+      nu = new Set(used); nu.add(mid);
+      extended=true;
+      if(promo && rules.promotion==='stop'){
+        results.push({path:[startSq].concat(tail,[land]), caps:Array.from(nu), stack:nm});
+      } else {
+        capFrom(nw, rules, nm, startSq, land, nu, tail.concat([land]), results, N, color);
+      }
+    }
+    if(!tp.k){
+      dirs=manCapDirs(color,rules);
+      for(d=0;d<dirs.length;d++){ dr=dirs[d][0]; dc=dirs[d][1];
+        mr=r+dr; mc=c+dc; if(!inB(mr,mc,N))continue; mid=mr*N+mc;
+        lr=r+2*dr; lc=c+2*dc; if(!inB(lr,lc,N))continue; land=lr*N+lc;
+        mt=top(work[mid]); if(!mt||mt.c===color) continue;
+        if(used.has(mid)) continue; if(work[land]!=null) continue;
+        step(mid,land);
+      }
+    } else {
+      for(d=0;d<DIAG.length;d++){ dr=DIAG[d][0]; dc=DIAG[d][1];
+        if(rules.flyingKings){
+          var nr=r+dr, nc=c+dc;
+          while(inB(nr,nc,N)&&work[nr*N+nc]==null){ nr+=dr; nc+=dc; }
+          if(!inB(nr,nc,N)) continue; mid=nr*N+nc;
+          mt=top(work[mid]); if(!mt||mt.c===color||used.has(mid)) continue;
+          lr=nr+dr; lc=nc+dc;
+          while(inB(lr,lc,N)&&work[lr*N+lc]==null){ step(mid, lr*N+lc); lr+=dr; lc+=dc; }
+        } else {
+          mr=r+dr; mc=c+dc; if(!inB(mr,mc,N))continue; mid=mr*N+mc;
+          lr=r+2*dr; lc=c+2*dc; if(!inB(lr,lc,N))continue; land=lr*N+lc;
+          mt=top(work[mid]); if(!mt||mt.c===color||used.has(mid)) continue;
+          if(work[land]!=null) continue;
+          step(mid,land);
+        }
+      }
+    }
+    if(!extended && tail.length>0) results.push({path:[startSq].concat(tail), caps:Array.from(used), stack:moving});
+  }
+
+  function genCaptures(b, rules, color){
+    var N=rules.size, results=[], i, s, work;
+    for(i=0;i<b.length;i++){ s=b[i]; if(!top(s)||top(s).c!==color) continue;
+      work=b.map(cloneStack); var moving=work[i].map(clone); work[i]=null;
+      capFrom(work, rules, moving, i, i, new Set(), [], results, N, color);
+    }
+    return results;
+  }
+
+  function genMoves(b, rules, color){
+    var caps=genCaptures(b,rules,color);
+    if(rules.captureMandatory!==false && caps.length) return caps;
+    var q=genQuiet(b,rules,color);
+    return caps.length?caps.concat(q):q;
+  }
+
+  function applyMove(b, rules, mv){
+    var nb=b.map(cloneStack), i, from=mv.path[0], to=mv.path[mv.path.length-1], red;
+    for(i=0;i<mv.caps.length;i++){ red=nb[mv.caps[i]]? nb[mv.caps[i]].slice(0,-1):[]; nb[mv.caps[i]]=red.length?red:null; }
+    nb[from]=null;
+    nb[to]=mv.stack.map(clone);
+    return nb;
+  }
+
+  function controlled(b,color){ var n=0,i; for(i=0;i<b.length;i++){ var t=top(b[i]); if(t&&t.c===color)n++; } return n; }
+  function result(b, rules, toMove){ return genMoves(b,rules,toMove).length===0 ? other(toMove) : null; }
+
+  function evaluate(b, rules, toMove){
+    var N=rules.size, manV=100, kingV=rules.flyingKings?260:150, score=0, i, s, t, r, adv, own, cap, j;
+    for(i=0;i<b.length;i++){ s=b[i]; t=top(s); if(!t) continue;
+      r=(i/N)|0;
+      var v=t.k?kingV:manV;
+      if(!t.k){ adv=(t.c==='w')?(N-1-r):r; v+=adv*3; }
+      // latent material inside the tower
+      own=0; cap=0; for(j=0;j<s.length-1;j++){ if(s[j].c===t.c) own++; else cap++; }
+      v += cap*22 + own*6;
+      score += (t.c==='w'? v : -v);
+    }
+    return toMove==='w'?score:-score;
+  }
+
+  function search(b, rules, toMove, depth, alpha, beta, deadline){
+    var res=result(b,rules,toMove);
+    if(res!==null) return res===toMove?(100000+depth):(-100000-depth);
+    if(depth<=0||now()>deadline) return evaluate(b,rules,toMove);
+    var moves=genMoves(b,rules,toMove); moves.sort(function(a,c){return c.caps.length-a.caps.length;});
+    var best=-Infinity,i,val;
+    for(i=0;i<moves.length;i++){ val=-search(applyMove(b,rules,moves[i]),rules,other(toMove),depth-1,-beta,-alpha,deadline);
+      if(val>best)best=val; if(best>alpha)alpha=best; if(alpha>=beta)break; }
+    return best;
+  }
+  function bestMove(b, rules, toMove, level){
+    var moves=genMoves(b,rules,toMove); if(!moves.length)return null; if(moves.length===1)return moves[0];
+    var budget=level===1?120:(level===2?500:1100), maxD=level===1?2:(level===2?6:10), deadline=now()+budget;
+    var chosen=moves[0], cv=-Infinity, d, ord, i, val, alpha, lb, lv;
+    for(d=1;d<=maxD;d++){ lb=null; lv=-Infinity; alpha=-Infinity; ord=moves.slice().sort(function(a,c){return c.caps.length-a.caps.length;});
+      for(i=0;i<ord.length;i++){ val=-search(applyMove(b,rules,ord[i]),rules,other(toMove),d-1,-Infinity,-alpha,deadline);
+        if(val>lv){lv=val;lb=ord[i];} if(val>alpha)alpha=val; if(now()>deadline)break; }
+      if(lb){chosen=lb;cv=lv;} if(now()>deadline)break; if(cv>90000)break;
+    }
+    if(level===1 && Math.random()<0.35) return moves[Math.floor(Math.random()*moves.length)];
+    return chosen;
+  }
+
+  function cell(b,sq){ var s=b[sq], t=top(s); return t?{cls:t.c+(t.k?' king':'')+(s.length>1?' stack':''), glyph:s.length>1?String(s.length):''}:{empty:true}; }
+  var T={ normRules:normRules, initialBoard:initialBoard, genMoves:genMoves, applyMove:applyMove,
+    result:result, evaluate:evaluate, bestMove:bestMove, controlled:controlled, other:other,
+    top:top, isPromoRow:isPromoRow, cell:cell };
+  if(typeof module!=='undefined'&&module.exports) module.exports=T; else root.DAMET=T;
+})(typeof self!=='undefined'?self:this);
+
+</script>
+
+<script>
+/* ============================================================
+   DAME FĂRĂ FRONTIERE — motor DAMATH (dame + scor aritmetic)
+   Mișcarea = dame (diagonal, dame zburătoare). Piesa = {c,k,n} (n = numărul jetonului).
+   La captură: scor += (numărul tău) OP (numărul capturat), OP = operatorul celulei pe care ATERIZEZI.
+   Câștigă scorul mai mare la final. Schema de numere/operatori e standardizată local (⚠).
+   Folosește motorul generic (DAME) pentru generarea mutărilor (testat).
+   ============================================================ */
+(function(root){
+  'use strict';
+  var D = (typeof module!=='undefined'&&module.exports) ? require('./engine.js') : root.DAME;
+  var SIZE=8, OPS=['+','−','×','÷'];
+  function other(c){ return c==='w'?'b':'w'; }
+  function isPromoRow(sq,color){ var r=(sq/SIZE)|0; return color==='w'?r===0:r===SIZE-1; }
+  function opAt(sq){ var r=(sq/SIZE)|0, c=sq%SIZE; return OPS[(2*Math.floor(r/2)+Math.floor(c/2))%4]; }
+  function playable(sq){ var r=(sq/SIZE)|0, c=sq%SIZE; return ((r+c)&1)===1; }
+  function round2(x){ return Math.round(x*100)/100; }
+  function applyOp(x,op,y){ var v=x+y; if(op==='−')v=x-y; else if(op==='×')v=x*y; else if(op==='÷')v=(y!==0?x/y:0); return round2(v); }
+
+  function rules(){ return D.normRules({size:SIZE, menCaptureBackward:true, flyingKings:true, maxCapture:false, promotion:'continue', captureMandatory:false}); }
+
+  function initialBoard(){
+    var b=new Array(SIZE*SIZE).fill(null), r,c, nb=0, nw=0;
+    for(r=0;r<SIZE;r++) for(c=0;c<SIZE;c++){ if(((r+c)&1)===1){
+      if(r<3){ b[r*SIZE+c]={c:'b',k:false,n:nb++}; }
+      else if(r>4){ b[r*SIZE+c]={c:'w',k:false,n:nw++}; } } }
+    b.sw=0; b.sb=0;
+    return b;
+  }
+  function clone(b){ var nb=b.map(function(p){return p?{c:p.c,k:p.k,n:p.n}:null;}); nb.sw=b.sw; nb.sb=b.sb; return nb; }
+  function genMoves(b, rl, color){ return D.genMoves(b, rl, color); }
+
+  function capBetween(caps, a, bsq){
+    var ar=(a/SIZE)|0, ac=a%SIZE, br=(bsq/SIZE)|0, bc=bsq%SIZE;
+    var dr=Math.sign(br-ar), dc=Math.sign(bc-ac), r=ar+dr, c=ac+dc, sq;
+    while(r!==br||c!==bc){ sq=r*SIZE+c; if(caps.indexOf(sq)>=0) return sq; r+=dr; c+=dc; }
+    return -1;
+  }
+  function moveGain(b, mv){
+    if(!mv.caps.length) return 0;
+    var mover=b[mv.path[0]], pts=0, i, leg, cap;
+    for(i=0;i<mv.path.length-1;i++){ leg=mv.path[i+1]; cap=capBetween(mv.caps, mv.path[i], leg);
+      if(cap>=0 && b[cap]) pts=round2(pts+applyOp(mover.n, opAt(leg), b[cap].n)); }
+    return pts;
+  }
+  function applyMove(b, rl, mv){
+    var nb=clone(b), from=mv.path[0], to=mv.path[mv.path.length-1], mover=nb[from], gain=moveGain(b, mv), i;
+    for(i=0;i<mv.caps.length;i++) nb[mv.caps[i]]=null;
+    nb[from]=null;
+    if(isPromoRow(to, mover.c)) mover.k=true;
+    nb[to]=mover;
+    if(mover.c==='w') nb.sw=round2(nb.sw+gain); else nb.sb=round2(nb.sb+gain);
+    return nb;
+  }
+  function count(b,color){ var n=0,i; for(i=0;i<b.length;i++) if(b[i]&&b[i].c===color)n++; return n; }
+  function result(b, rl, toMove){
+    if(genMoves(b, rl, toMove).length===0) return b.sw>b.sb?'w':(b.sb>b.sw?'b':'draw');
+    return null;
+  }
+  function evaluate(b, color){
+    var sd=(b.sw-b.sb), i, mat=0;
+    for(i=0;i<b.length;i++) if(b[i]) mat += (b[i].c==='w'?1:-1)*(b[i].k?6:4);
+    var s = sd*12 + mat;
+    return color==='w'?s:-s;
+  }
+  function now(){ return (typeof performance!=='undefined'&&performance.now)?performance.now():Date.now(); }
+  function search(b, rl, toMove, depth, alpha, beta, deadline){
+    var res=result(b, rl, toMove);
+    if(res!==null) return res===toMove?(90000+depth):(res==='draw'?0:(-90000-depth));
+    if(depth<=0||now()>deadline) return evaluate(b, toMove);
+    var moves=genMoves(b, rl, toMove); moves.sort(function(a,c){return moveGain(b,c)-moveGain(b,a);});
+    var best=-Infinity,i,val;
+    for(i=0;i<moves.length;i++){ val=-search(applyMove(b,rl,moves[i]),rl,other(toMove),depth-1,-beta,-alpha,deadline);
+      if(val>best)best=val; if(best>alpha)alpha=best; if(alpha>=beta)break; }
+    return best;
+  }
+  function bestMove(b, rl, toMove, level){
+    var moves=genMoves(b, rl, toMove); if(!moves.length)return null; if(moves.length===1)return moves[0];
+    var budget=level===1?140:(level===2?550:1100), maxD=level===1?2:(level===2?6:9), deadline=now()+budget;
+    var chosen=moves[0], d, ord, i, val, alpha, lb, lv;
+    for(d=1;d<=maxD;d++){ lb=null; lv=-Infinity; alpha=-Infinity;
+      ord=moves.slice().sort(function(a,c){return moveGain(b,c)-moveGain(b,a);});
+      for(i=0;i<ord.length;i++){ val=-search(applyMove(b,rl,ord[i]),rl,other(toMove),d-1,-Infinity,-alpha,deadline);
+        if(val>lv){lv=val;lb=ord[i];} if(val>alpha)alpha=val; if(now()>deadline)break; }
+      if(lb)chosen=lb; if(now()>deadline)break;
+    }
+    if(level===1 && Math.random()<0.3) return moves[Math.floor(Math.random()*moves.length)];
+    return chosen;
+  }
+
+  function cell(b,sq){ var p=b[sq]; return p?{cls:p.c+(p.k?' king':''), glyph:String(p.n)}:{empty:true}; }
+  function cellBg(sq){ return playable(sq)?opAt(sq):null; }
+  function meta(b){ return '★ Alb '+round2(b.sw)+' — Negru '+round2(b.sb); }
+
+  var M={ normRules:rules, rules:rules, initialBoard:initialBoard, genMoves:genMoves, applyMove:applyMove,
+    result:result, bestMove:bestMove, count:count, other:other, cell:cell, cellBg:cellBg, meta:meta,
+    moveGain:moveGain, opAt:opAt, isPromoRow:isPromoRow };
+  if(typeof module!=='undefined'&&module.exports) module.exports=M; else root.DAMATH=M;
+})(typeof self!=='undefined'?self:this);
+
+</script>
+
+<script>
+/* ============================================================
+   DAME FĂRĂ FRONTIERE — motor CHESKERS (hibrid dame × șah, după Golomb 1948)
+   Piesa = {c, t, k}: t = 'm' pion, 'b' nebun (glisor diagonal, capturează zburând),
+   'c' cămilă (săritor (1,3)/(3,1), capturează prin deplasare). Pionii promovează în damă.
+   Captura e obligatorie. RECONSTRUCȚIE APROXIMATIVĂ a regulilor (⚠⚠).
+   ============================================================ */
+(function(root){
+  'use strict';
+  var SIZE=8, DIAG=[[-1,-1],[-1,1],[1,-1],[1,1]];
+  var CAMEL=[[-1,-3],[-1,3],[1,-3],[1,3],[-3,-1],[-3,1],[3,-1],[3,1]];
+  function other(c){ return c==='w'?'b':'w'; }
+  function inB(r,c){ return r>=0&&r<SIZE&&c>=0&&c<SIZE; }
+  function isPromoRow(sq,color){ var r=(sq/SIZE)|0; return color==='w'?r===0:r===SIZE-1; }
+  function dfwd(c){ return c==='w'?[[-1,-1],[-1,1]]:[[1,-1],[1,1]]; }
+  function clone(p){ return p?{c:p.c,t:p.t,k:p.k}:null; }
+  function cloneB(b){ return b.map(clone); }
+  function now(){ return (typeof performance!=='undefined'&&performance.now)?performance.now():Date.now(); }
+  function normRules(){ return {size:SIZE}; }
+
+  function initialBoard(){
+    var b=new Array(SIZE*SIZE).fill(null), r,c;
+    for(r=0;r<SIZE;r++) for(c=0;c<SIZE;c++){ if(((r+c)&1)===1){
+      if(r<3) b[r*SIZE+c]={c:'b',t:'m',k:false};
+      else if(r>4) b[r*SIZE+c]={c:'w',t:'m',k:false};
+    }}
+    // replace two men per side with bishop + camel (on the back rank dark squares)
+    b[0*SIZE+1].t='b'; b[0*SIZE+5].t='c';
+    b[7*SIZE+6].t='b'; b[7*SIZE+2].t='c';
+    return b;
+  }
+
+  // ---- captures ----
+  function leapManKing(b, sq, color, king){
+    // checkers-style short-leap captures for man (fwd only) / king (both), with chaining
+    var results=[];
+    function rec(work, cur, used, tail){
+      var r=(cur/SIZE)|0, c=cur%SIZE, dirs=king?DIAG:dfwd(color), d, ext=false;
+      for(d=0;d<dirs.length;d++){ var dr=dirs[d][0], dc=dirs[d][1], mr=r+dr, mc=c+dc, lr=r+2*dr, lc=c+2*dc;
+        if(!inB(mr,mc)||!inB(lr,lc)) continue; var mid=mr*SIZE+mc, land=lr*SIZE+lc;
+        if(!work[mid]||work[mid].c===color) continue; if(used.indexOf(mid)>=0) continue; if(work[land]) continue;
+        var nw=cloneB(work); nw[land]=nw[cur]; nw[cur]=null; nw[mid]=null;
+        if(isPromoRow(land,color) && nw[land].t==='m') nw[land].k=true;
+        ext=true; rec(nw, land, used.concat([mid]), tail.concat([land]));
+      }
+      if(!ext && tail.length) results.push({path:[sq].concat(tail), caps:used.slice()});
+    }
+    rec(b, sq, [], []);
+    return results;
+  }
+  function leapBishop(b, sq, color){
+    // flying-diagonal capture: jump first enemy on a diagonal, land on any empty beyond; chaining
+    var results=[];
+    function rec(work, cur, used, tail){
+      var r=(cur/SIZE)|0, c=cur%SIZE, d, ext=false;
+      for(d=0;d<DIAG.length;d++){ var dr=DIAG[d][0], dc=DIAG[d][1], nr=r+dr, nc=c+dc;
+        while(inB(nr,nc)&&!work[nr*SIZE+nc]){ nr+=dr; nc+=dc; }
+        if(!inB(nr,nc)) continue; var mid=nr*SIZE+nc;
+        if(work[mid].c===color||used.indexOf(mid)>=0) continue;
+        var lr=nr+dr, lc=nc+dc;
+        while(inB(lr,lc)&&!work[lr*SIZE+lc]){ var land=lr*SIZE+lc;
+          var nw=cloneB(work); nw[land]=nw[cur]; nw[cur]=null; nw[mid]=null;
+          ext=true; rec(nw, land, used.concat([mid]), tail.concat([land]));
+          lr+=dr; lc+=dc; }
+      }
+      if(!ext && tail.length) results.push({path:[sq].concat(tail), caps:used.slice()});
+    }
+    rec(b, sq, [], []);
+    return results;
+  }
+  function capCamel(b, sq, color){
+    // displacement capture: land directly on an enemy on a camel target (single, no chain)
+    var r=(sq/SIZE)|0, c=sq%SIZE, out=[], i;
+    for(i=0;i<CAMEL.length;i++){ var nr=r+CAMEL[i][0], nc=c+CAMEL[i][1]; if(!inB(nr,nc))continue; var t=nr*SIZE+nc;
+      if(b[t]&&b[t].c!==color) out.push({path:[sq,t], caps:[t]}); }
+    return out;
+  }
+  function genCaptures(b, color){
+    var out=[], i, p;
+    for(i=0;i<b.length;i++){ p=b[i]; if(!p||p.c!==color) continue;
+      if(p.t==='b') out=out.concat(leapBishop(b,i,color));
+      else if(p.t==='c') out=out.concat(capCamel(b,i,color));
+      else out=out.concat(leapManKing(b,i,color,p.k));
+    }
+    return out;
+  }
+  // ---- quiet ----
+  function genQuiet(b, color){
+    var out=[], i, p, r, c, d;
+    for(i=0;i<b.length;i++){ p=b[i]; if(!p||p.c!==color) continue; r=(i/SIZE)|0; c=i%SIZE;
+      if(p.t==='m'){ var dirs=p.k?DIAG:dfwd(color); for(d=0;d<dirs.length;d++){ var nr=r+dirs[d][0], nc=c+dirs[d][1]; if(inB(nr,nc)&&!b[nr*SIZE+nc]) out.push({path:[i,nr*SIZE+nc],caps:[]}); } }
+      else if(p.t==='b'){ for(d=0;d<DIAG.length;d++){ var ar=r+DIAG[d][0], ac=c+DIAG[d][1]; while(inB(ar,ac)&&!b[ar*SIZE+ac]){ out.push({path:[i,ar*SIZE+ac],caps:[]}); ar+=DIAG[d][0]; ac+=DIAG[d][1]; } } }
+      else { for(d=0;d<CAMEL.length;d++){ var br=r+CAMEL[d][0], bc=c+CAMEL[d][1]; if(inB(br,bc)&&!b[br*SIZE+bc]) out.push({path:[i,br*SIZE+bc],caps:[]}); } }
+    }
+    return out;
+  }
+  function genMoves(b, rl, color){ var caps=genCaptures(b,color); if(caps.length) return caps; return genQuiet(b,color); }
+
+  function applyMove(b, rl, mv){
+    var nb=cloneB(b), from=mv.path[0], to=mv.path[mv.path.length-1], i;
+    for(i=0;i<mv.caps.length;i++) nb[mv.caps[i]]=null;
+    var pc=nb[from]; nb[from]=null;
+    if(pc.t==='m' && isPromoRow(to,pc.c)) pc.k=true;
+    nb[to]=pc;
+    return nb;
+  }
+  function count(b,color){ var n=0,i; for(i=0;i<b.length;i++) if(b[i]&&b[i].c===color)n++; return n; }
+  function result(b, rl, toMove){ return genMoves(b,rl,toMove).length===0 ? other(toMove) : null; }
+  function val(p){ return p.t==='b'?210:(p.t==='c'?175:(p.k?180:100)); }
+  function evaluate(b, color){
+    var s=0,i,p,r,adv;
+    for(i=0;i<b.length;i++){ p=b[i]; if(!p) continue; r=(i/SIZE)|0; var v=val(p);
+      if(p.t==='m'&&!p.k){ adv=(p.c==='w')?(SIZE-1-r):r; v+=adv*3; }
+      s+=(p.c==='w'?v:-v); }
+    return color==='w'?s:-s;
+  }
+  function search(b, rl, toMove, depth, alpha, beta, deadline){
+    var res=result(b,rl,toMove); if(res!==null) return res===toMove?(100000+depth):(-100000-depth);
+    if(depth<=0||now()>deadline) return evaluate(b,toMove);
+    var moves=genMoves(b,rl,toMove); moves.sort(function(a,c){return c.caps.length-a.caps.length;});
+    var best=-Infinity,i,v;
+    for(i=0;i<moves.length;i++){ v=-search(applyMove(b,rl,moves[i]),rl,other(toMove),depth-1,-beta,-alpha,deadline);
+      if(v>best)best=v; if(best>alpha)alpha=best; if(alpha>=beta)break; }
+    return best;
+  }
+  function bestMove(b, rl, toMove, level){
+    var moves=genMoves(b,rl,toMove); if(!moves.length)return null; if(moves.length===1)return moves[0];
+    var budget=level===1?140:(level===2?550:1100), maxD=level===1?2:(level===2?6:9), deadline=now()+budget;
+    var chosen=moves[0], d, ord, i, v, alpha, lb, lv;
+    for(d=1;d<=maxD;d++){ lb=null; lv=-Infinity; alpha=-Infinity; ord=moves.slice().sort(function(a,c){return c.caps.length-a.caps.length;});
+      for(i=0;i<ord.length;i++){ v=-search(applyMove(b,rl,ord[i]),rl,other(toMove),d-1,-Infinity,-alpha,deadline);
+        if(v>lv){lv=v;lb=ord[i];} if(v>alpha)alpha=v; if(now()>deadline)break; }
+      if(lb)chosen=lb; if(now()>deadline)break;
+    }
+    if(level===1 && Math.random()<0.3) return moves[Math.floor(Math.random()*moves.length)];
+    return chosen;
+  }
+  function cell(b,sq){ var p=b[sq]; if(!p) return {empty:true};
+    var g = p.t==='b'?'N' : (p.t==='c'?'C' : (p.k?'♛':'')); return {cls:p.c+(p.k?' king':''), glyph:g}; }
+
+  var M={ normRules:normRules, initialBoard:initialBoard, genMoves:genMoves, applyMove:applyMove,
+    result:result, bestMove:bestMove, count:count, other:other, cell:cell, isPromoRow:isPromoRow };
+  if(typeof module!=='undefined'&&module.exports) module.exports=M; else root.CHESKERS=M;
+})(typeof self!=='undefined'?self:this);
+
+</script>
+
+<script>
+(function(){
+"use strict";
+var D = window.DAME;
+var $  = function(s,r){return (r||document).querySelector(s);};
+var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+/* ---------------- engine configs (one generic engine, many rule-sets) ---------------- */
+var ENGINES = {
+  intl:        {size:10, menCaptureBackward:true,  flyingKings:true,  maxCapture:true,  promotion:"final"},
+  english:     {size:8,                                                                  promotion:"stop"},
+  brazilian:   {size:8,  menCaptureBackward:true,  flyingKings:true,  maxCapture:true,  promotion:"final"},
+  russian:     {size:8,  menCaptureBackward:true,  flyingKings:true,  maxCapture:false, promotion:"continue"},
+  pool:        {size:8,  menCaptureBackward:true,  flyingKings:true,  maxCapture:false, promotion:"stop"},
+  italian:     {size:8,  maxCapture:true, menCanCaptureKing:false, kingPriority:true,    promotion:"stop"},
+  spanish:     {size:8,  flyingKings:true, maxCapture:true,                              promotion:"stop"},
+  czech:       {size:8,  flyingKings:true, maxCapture:false, kingPriority:true,          promotion:"stop"},
+  german:      {size:8,  menCaptureBackward:true,  flyingKings:true,  maxCapture:true,  promotion:"final"},
+  romanian:    {size:8,  menCaptureBackward:true,  flyingKings:true,  maxCapture:false, promotion:"stop"},
+  thai:        {size:8,  flyingKings:true, maxCapture:false,                            promotion:"stop"},
+  canadian:    {size:12, menCaptureBackward:true,  flyingKings:true,  maxCapture:true,  promotion:"final"},
+  turkish:     {size:8,  geometry:"orth", flyingKings:true, maxCapture:true,            promotion:"final"},
+  giveaway:    {size:8,  menCaptureBackward:true,  flyingKings:true,  maxCapture:false, promotion:"stop", giveaway:true},
+  giveawayIntl:{size:10, menCaptureBackward:true,  flyingKings:true,  maxCapture:true,  promotion:"final", giveaway:true},
+  /* extended engine: hybrid directions / weighted-max / custom starts */
+  diagonal:    {size:8,  start:"diagonal", menCaptureBackward:true, flyingKings:true, maxCapture:false, promotion:"stop"},
+  frisian:     {size:10, menCaptureBackward:true, orthMen:true, menOrthBackward:true, kingDiag:true, kingOrth:true, flyingKings:true, maxCapture:true, weightedMax:2, promotion:"final"},
+  armenian:    {size:8,  geometry:"orth", diagMen:true, orthMen:true, menCaptureBackward:true, menOrthBackward:true, menMoveDiag:true, menMoveOrth:true, kingDiag:true, kingOrth:true, flyingKings:true, maxCapture:true, promotion:"final"},
+  dameo:       {size:8,  geometry:"orth", menOrthBackward:true, flyingKings:true, maxCapture:true, promotion:"final"},
+  croda:       {size:8,  geometry:"orth", menOrthBackward:true, flyingKings:true, maxCapture:true, promotion:"final"}
+};
+
+/* tower engine (Bașni / Lasca) — cells hold stacks */
+var TOWERS = {
+  bashni: {size:8, parity:1, flyingKings:true,  menCaptureBackward:true,  promotion:"continue"},
+  lasca:  {size:7, parity:0, flyingKings:false, menCaptureBackward:false, promotion:"stop"}
+};
+
+/* engine registry: which module + config map powers each variant */
+var DT = window.DAMET, DM = window.DAMATH, CH = window.CHESKERS;
+function engineOf(v){ return v.engine || "gen"; }
+function moduleOf(kind){ return kind==="tower"?DT : kind==="damath"?DM : kind==="cheskers"?CH : D; }
+function other(c){ return c==="w"?"b":"w"; }
+function pieceCount(col){
+  if(P.kind==="tower")   return DT.controlled(P.board, col);
+  if(P.kind==="damath")  return DM.count(P.board, col);
+  if(P.kind==="cheskers")return CH.count(P.board, col);
+  return D.countPieces(P.board, col);
+}
+
+/* ---------------- data ---------------- */
+var FAM = {standard:"Standard", regional:"Regională", istoric:"Istorică", modern:"Modernă", ortogonal:"Ortogonală", fantezie:"Fantezie", mare:"Tablă mare", lexicon:"Lexicon"};
+
+var DATA = [
+ {id:"intl", t:"Dame internațională", aka:"Polish draughts · 10×10", type:"variant", fam:"standard", board:10, geo:"diag", diff:3, beg:false, play:"intl", approx:false, reg:"Olanda / Franța", era:"sec. XVIII",
+  blurb:"Forma „mare” a damei și standardul competițional mondial (FMJD). Pe 10×10 cu 20 de piese pe culoare; omul capturează și înainte și înapoi, dama zboară pe toată diagonala, iar captura maximă e obligatorie.",
+  rules:["Tablă 10×10, 20 de piese / culoare","Omul mișcă doar înainte, dar capturează în toate direcțiile","Damă zburătoare (orice distanță)","Trebuie aleasă captura cu cele mai multe piese","Promovare doar dacă te oprești pe ultimul rând"],
+  facts:{"Piese":"20 / culoare","Damă":"zburătoare","Captură":"înainte + înapoi","Maximă":"obligatorie","Promovare":"la final de mutare"}, sim:["brazilian","canadian","frisian"]},
+
+ {id:"english", t:"Dame englezească", aka:"Checkers · American · 8×8", type:"variant", fam:"standard", board:8, geo:"diag", diff:2, beg:true, play:"english", approx:false, reg:"Anglia / SUA", era:"sec. XVI",
+  blurb:"Cel mai răspândit joc de dame din lume. Simplu și ascuțit: omul capturează doar înainte, dama merge un singur pătrat, iar un om care atinge ultimul rând e încoronat și mutarea se oprește acolo.",
+  rules:["Tablă 8×8, 12 piese / culoare","Omul capturează doar înainte","Damă NEzburătoare (un pătrat)","Captură obligatorie, dar NU neapărat maximă","Încoronarea oprește mutarea"],
+  facts:{"Piese":"12 / culoare","Damă":"un pătrat","Captură":"doar înainte","Maximă":"nu","Promovare":"oprește mutarea"}, sim:["russian","pool","italian"]},
+
+ {id:"brazilian", t:"Dame braziliană", aka:"Reguli internaționale pe 8×8", type:"variant", fam:"standard", board:8, geo:"diag", diff:3, beg:false, play:"brazilian", approx:false, reg:"Brazilia", era:"sec. XX",
+  blurb:"Regulile internaționale pe tabla mică de 8×8: captură în ambele sensuri, damă zburătoare, captură maximă. Puntea perfectă între englez și internațional.",
+  rules:["Tablă 8×8","Captură înainte și înapoi","Damă zburătoare","Captură maximă obligatorie","Promovare la final"], facts:{"Piese":"12 / culoare","Damă":"zburătoare","Captură":"înainte + înapoi","Maximă":"obligatorie"}, sim:["intl","russian","german"]},
+
+ {id:"russian", t:"Dame rusească", aka:"Șașki · Shashki", type:"variant", fam:"regional", board:8, geo:"diag", diff:3, beg:false, play:"russian", approx:false, reg:"Rusia", era:"sec. XVIII",
+  blurb:"Dama clasică rusească, spectaculoasă prin promovarea „în zbor”: dacă un om atinge ultimul rând în mijlocul unei capturi, devine pe loc damă și continuă captura ca damă zburătoare.",
+  rules:["Tablă 8×8","Captură înainte și înapoi","Damă zburătoare","Captura NU trebuie să fie maximă","Promovare în timpul capturii → continuă imediat ca damă"], facts:{"Piese":"12 / culoare","Damă":"zburătoare","Captură":"înainte + înapoi","Maximă":"nu","Promovare":"continuă ca damă"}, sim:["pool","brazilian","english"]},
+
+ {id:"canadian", t:"Dame canadiană", aka:"12×12 · 30 piese", type:"variant", fam:"mare", board:12, geo:"diag", diff:4, beg:false, play:"canadian", approx:false, reg:"Québec, Canada", era:"sec. XX",
+  blurb:"Uriașa rudă a internaționalei: 12×12, 30 de piese pe culoare, aceleași reguli. Partide lungi, cu combinații amețitoare și un final mai bogat.",
+  rules:["Tablă 12×12, 30 de piese / culoare","Reguli internaționale","Damă zburătoare","Captură maximă obligatorie"], facts:{"Piese":"30 / culoare","Damă":"zburătoare","Maximă":"obligatorie"}, sim:["intl"]},
+
+ {id:"italian", t:"Dame italiană", aka:"Dama · 8×8", type:"variant", fam:"regional", board:8, geo:"diag", diff:3, beg:false, play:"italian", approx:true, reg:"Italia", era:"sec. XVI",
+  blurb:"Eleganța conservatoare: omul nu are voie să captureze o damă, dama merge un singur pătrat, iar regulile de prioritate cer captura maximă (și, la egalitate, cu cât mai multe dame).",
+  rules:["Tablă 8×8","Omul NU poate captura o damă","Damă NEzburătoare","Captură maximă + prioritatea damei","⚠ prioritățile fine sunt aproximate"], facts:{"Piese":"12 / culoare","Damă":"un pătrat","Maximă":"obligatorie","Special":"omul nu ia dama"}, sim:["english","spanish"]},
+
+ {id:"spanish", t:"Dame spaniolă", aka:"Damas españolas", type:"variant", fam:"regional", board:8, geo:"diag", diff:3, beg:false, play:"spanish", approx:true, reg:"Spania", era:"sec. XVI",
+  blurb:"Omul capturează doar înainte, dar dama zboară; captura maximă e obligatorie (la egalitate, captura cu mai multe dame). Tabla e orientată cu colțul dublu pe dreapta.",
+  rules:["Tablă 8×8","Omul capturează doar înainte","Damă zburătoare","Captură maximă obligatorie","⚠ orientarea/prioritățile sunt aproximate"], facts:{"Piese":"12 / culoare","Damă":"zburătoare","Captură":"doar înainte","Maximă":"obligatorie"}, sim:["portuguese","italian"]},
+
+ {id:"portuguese", t:"Dame portugheză", aka:"Damas · ≈ spaniolă", type:"variant", fam:"regional", board:8, geo:"diag", diff:3, beg:false, play:"spanish", approx:true, reg:"Portugalia", era:"sec. XVII",
+  blurb:"Rudă apropiată a damei spaniole, cu aceeași logică: omul înainte, dama zburătoare, captura maximă obligatorie.",
+  rules:["Tablă 8×8","Om înainte, damă zburătoare","Captură maximă","⚠ tratată ca varianta spaniolă"], facts:{"Damă":"zburătoare","Captură":"doar înainte","Maximă":"obligatorie"}, sim:["spanish"]},
+
+ {id:"czech", t:"Dame cehă", aka:"Česká dáma", type:"variant", fam:"regional", board:8, geo:"diag", diff:2, beg:false, play:"czech", approx:true, reg:"Cehia", era:"sec. XIX",
+  blurb:"Omul capturează doar înainte, dama zboară; captura nu trebuie să fie maximă, dar dacă o damă poate captura, ești obligat să capturezi cu dama (prioritatea damei).",
+  rules:["Tablă 8×8","Om înainte, damă zburătoare","Captura NU trebuie maximă","Trebuie să capturezi cu dama dacă poate","⚠ prioritatea e simplificată"], facts:{"Damă":"zburătoare","Captură":"doar înainte","Maximă":"nu","Special":"prioritatea damei"}, sim:["english","german"]},
+
+ {id:"german", t:"Dame germană", aka:"Schwarzdame", type:"variant", fam:"regional", board:8, geo:"diag", diff:3, beg:false, play:"german", approx:true, reg:"Germania", era:"sec. XIX",
+  blurb:"Pe 8×8 cu reguli apropiate de internațional: captură în ambele sensuri, damă zburătoare, captură maximă obligatorie.",
+  rules:["Tablă 8×8","Captură înainte și înapoi","Damă zburătoare","Captură maximă obligatorie"], facts:{"Damă":"zburătoare","Captură":"înainte + înapoi","Maximă":"obligatorie"}, sim:["brazilian","intl"]},
+
+ {id:"pool", t:"Pool checkers", aka:"American pool · 8×8", type:"variant", fam:"regional", board:8, geo:"diag", diff:2, beg:false, play:"pool", approx:false, reg:"SUA (sud)", era:"sec. XIX",
+  blurb:"Foarte populară în SUA: ca englezul, dar omul capturează și înapoi, iar dama zboară. Încoronarea oprește totuși mutarea.",
+  rules:["Tablă 8×8","Captură înainte și înapoi","Damă zburătoare","Captura NU trebuie maximă","Încoronarea oprește mutarea"], facts:{"Damă":"zburătoare","Captură":"înainte + înapoi","Maximă":"nu"}, sim:["russian","english"]},
+
+ {id:"romanian", t:"Dame (varianta uzuală RO)", aka:"reguli de curte · 8×8", type:"variant", fam:"regional", board:8, geo:"diag", diff:2, beg:true, play:"romanian", approx:true, reg:"România", era:"—",
+  blurb:"Varianta cea mai întâlnită pe la noi pe 8×8: damă zburătoare, captură în ambele sensuri, captura nu trebuie să fie maximă. ⚠ Regulile variază mult de la o regiune la alta — stabilește-le cu partenerul de joc.",
+  rules:["Tablă 8×8","Captură înainte și înapoi","Damă zburătoare","Captura NU trebuie maximă","⚠ reguli de curte variabile (nestandardizate)"], facts:{"Damă":"zburătoare","Captură":"înainte + înapoi","Maximă":"nu"}, sim:["russian","pool"]},
+
+ {id:"thai", t:"Dame thailandeză", aka:"Makhos · หมากฮอส", type:"variant", fam:"regional", board:8, geo:"diag", diff:2, beg:false, play:"thai", approx:true, reg:"Thailanda", era:"—",
+  blurb:"Makhos, dama thailandeză pe 8×8: omul înainte, dama zburătoare, captura nu trebuie maximă. Înrudită cultural cu makruk-ul (șahul thailandez).",
+  rules:["Tablă 8×8","Om înainte, damă zburătoare","Captura NU trebuie maximă","⚠ detalii regionale simplificate"], facts:{"Damă":"zburătoare","Captură":"doar înainte","Maximă":"nu"}, sim:["english"]},
+
+ {id:"turkish", t:"Dame turcească", aka:"Dama · ortogonală", type:"variant", fam:"ortogonal", board:8, geo:"orth", diff:3, beg:false, play:"turkish", approx:false, reg:"Turcia / Balcani / Orientul Mijlociu", era:"—",
+  blurb:"Renunță complet la diagonale: 16 piese pe două rânduri pline, mișcare și captură pe orizontală și verticală. Dama mătură ortogonal toată linia, iar captura e maximă.",
+  rules:["Tablă 8×8, 16 piese / culoare","Mișcare/captură ortogonală (sus/jos/stânga/dreapta)","Omul nu merge înapoi","Damă zburătoare ortogonală","Captură maximă obligatorie"], facts:{"Piese":"16 / culoare","Geometrie":"ortogonală","Damă":"zburătoare (drept)","Maximă":"obligatorie"}, sim:["armenian"]},
+
+ {id:"frisian", t:"Dame frizonă", aka:"Frysk damjen · 10×10", type:"variant", fam:"regional", board:10, geo:"diag", diff:4, beg:false, play:"frisian", engine:"gen", approx:true, reg:"Frizia (Olanda)", era:"sec. XIX",
+  blurb:"Probabil cea mai grea dama europeană: pe 10×10 dama capturează și ortogonal, nu doar diagonal, iar captura maximă e „ponderată” (o damă valorează mai mult decât doi oameni). Documentată — motorul nu o implementează încă.",
+  rules:["Tablă 10×10","Dama capturează și pe orizontală/verticală","Captură maximă PONDERATĂ (dama > oameni)","Reguli de repetiție stricte","Documentată, încă nejucabilă aici"], facts:{"Damă":"capturează diag + ortogonal","Maximă":"ponderată"}, sim:["intl"]},
+
+ {id:"armenian", t:"Dame armenească", aka:"Tama", type:"variant", fam:"ortogonal", board:8, geo:"orth", diff:3, beg:false, play:"armenian", engine:"gen", approx:true, reg:"Armenia", era:"—",
+  blurb:"Tama: omul se mișcă și capturează atât diagonal înainte, cât și ortogonal; dama zboară pe ambele tipuri de linii. Hibrid fascinant între diagonal și ortogonal. Deocamdată documentată.",
+  rules:["Tablă 8×8","Mișcare/captură diagonal + ortogonal","Damă zburătoare pe ambele","Documentată, încă nejucabilă"], facts:{"Geometrie":"diag + ortogonal","Damă":"zburătoare"}, sim:["turkish"]},
+
+ {id:"dameo", t:"Dameo", aka:"Christian Freeling (2000)", type:"variant", fam:"modern", board:8, geo:"diag", diff:3, beg:false, play:"dameo", engine:"gen", approx:true, reg:"Olanda", era:"2000",
+  blurb:"Reinventare modernă elegantă: pionii merg ortogonal înainte și pot avansa în „șiruri” liniare, iar captura se face prin săritură. Documentată ca reper de design.",
+  rules:["Tablă 8×8","Pioni: mișcare ortogonală înainte","Deplasare liniară a unui șir de piese","Captură prin săritură","Documentată"], facts:{"Autor":"C. Freeling","An":"2000"}, sim:["croda","english"]},
+
+ {id:"croda", t:"Croda", aka:"mișcare liniară", type:"variant", fam:"modern", board:8, geo:"diag", diff:3, beg:false, play:"croda", engine:"gen", approx:true, reg:"—", era:"sec. XXI",
+  blurb:"Variantă modernă cu deplasare liniară a grupurilor de piese, în spiritul lui Dameo. Documentată ca punct de plecare pentru experimente proprii.",
+  rules:["Tablă 8×8","Mișcare liniară a grupurilor","Documentată"], facts:{}, sim:["dameo"]},
+
+ {id:"lasca", t:"Lasca", aka:"Emanuel Lasker (1911)", type:"variant", fam:"modern", board:7, geo:"diag", diff:3, beg:false, play:"lasca", engine:"tower", approx:true, reg:"Germania", era:"1911",
+  blurb:"Creată de campionul mondial de șah Emanuel Lasker: pe 7×7, piesele capturate NU se scot, ci sunt „prinse” sub piesa care capturează, formând turnuri. Cine controlează vârful conduce turnul.",
+  rules:["Tablă 7×7","Capturile creează turnuri (piese suprapuse)","Stăpânești turnul dacă piesa ta e deasupra","Documentată, mecanică de turnuri neimplementată"], facts:{"Autor":"E. Lasker","An":"1911","Special":"turnuri"}, sim:["bashni"]},
+
+ {id:"bashni", t:"Bașni", aka:"Башни · turnuri rusești", type:"variant", fam:"istoric", board:8, geo:"diag", diff:3, beg:false, play:"bashni", engine:"tower", approx:true, reg:"Rusia", era:"sec. XIX",
+  blurb:"„Turnuri”: varianta rusească din care s-a inspirat Lasca. Capturile suprapun piesele în coloane, iar jocul devine despre stăpânirea turnurilor, nu despre eliminare.",
+  rules:["Tablă 8×8","Capturile suprapun piesele în turnuri","Controlul vârfului = controlul turnului","Documentată"], facts:{"Special":"turnuri"}, sim:["lasca","russian"]},
+
+ {id:"cheskers", t:"Cheskers", aka:"Solomon Golomb (1948)", type:"variant", fam:"fantezie", board:8, geo:"diag", diff:3, beg:false, play:"cheskers", engine:"cheskers", approx:true, reg:"SUA", era:"1948",
+  blurb:"Hibrid dame–șah de Solomon Golomb: peste damele clasice adaugă piese inspirate din șah (un fel de „nebuni” și o piesă de tip vânător). Documentată ca un experiment ingenios.",
+  rules:["Tablă 8×8","Dame + piese de tip șah","Documentată"], facts:{"Autor":"S. Golomb","An":"1948"}, sim:["giveaway"]},
+
+ {id:"damath", t:"Damath", aka:"dame matematic", type:"variant", fam:"modern", board:8, geo:"diag", diff:2, beg:false, play:"damath", engine:"damath", approx:true, reg:"Filipine", era:"1980",
+  blurb:"Joc educativ filipinez: pătratele poartă operații matematice, iar o captură valorează cât rezultatul calculului. Dama întâlnește aritmetica — folosit în școli.",
+  rules:["Tablă 8×8 cu operații pe pătrate","Capturile produc scor numeric","Câștigă cel cu scorul mai mare","Documentată"], facts:{"Scop":"educativ","Special":"scor matematic"}, sim:[]},
+
+ {id:"giveaway", t:"Antidame (sinucigașă)", aka:"Giveaway · 8×8", type:"variant", fam:"fantezie", board:8, geo:"diag", diff:2, beg:false, play:"giveaway", approx:false, reg:"—", era:"—",
+  blurb:"Scopul e inversat: câștigi dacă rămâi fără piese sau fără mutare. Captura e tot obligatorie, deci trebuie să-ți „dăruiești” piesele inteligent. Surprinzător de tactică.",
+  rules:["Tablă 8×8","Câștigi dacă rămâi fără piese / fără mutări","Captură obligatorie","Damă zburătoare"], facts:{"Scop":"inversat","Captură":"obligatorie"}, sim:["intl-suicide"]},
+
+ {id:"intl-suicide", t:"Antidame internațională", aka:"Giveaway 10×10", type:"variant", fam:"fantezie", board:10, geo:"diag", diff:3, beg:false, play:"giveawayIntl", approx:false, reg:"—", era:"—",
+  blurb:"Aceeași idee inversată, dar pe 10×10 cu reguli internaționale (captură maximă obligatorie). Mult mai tactică decât pare la prima vedere.",
+  rules:["Tablă 10×10","Scop inversat (pierzi tot = câștigi)","Captură maximă obligatorie","Damă zburătoare"], facts:{"Scop":"inversat","Maximă":"obligatorie"}, sim:["giveaway"]},
+
+ {id:"diagonal", t:"Dame diagonală", aka:"setup rotit · 8×8", type:"variant", fam:"fantezie", board:8, geo:"diag", diff:2, beg:false, play:"diagonal", engine:"gen", approx:true, reg:"—", era:"—",
+  blurb:"Reguli englezești, dar așezarea inițială e rotită — piesele pornesc pe celelalte colțuri, schimbând complet deschiderile. Documentată ca variantă de setup.",
+  rules:["Tablă 8×8","Reguli englezești","Așezare inițială rotită 90°","Documentată"], facts:{}, sim:["english"]},
+
+ /* ---- lexicon ---- */
+ {id:"lex-dama", t:"Damă (king)", type:"lexicon", fam:"lexicon", board:null, play:null,
+  blurb:"Piesa promovată, obținută când un om atinge ultimul rând advers. În multe variante e „zburătoare”: parcurge orice distanță pe linia ei.", rules:[], facts:{}, sim:["lex-promovare","lex-zbur"]},
+ {id:"lex-om", t:"Om / pion / pul", type:"lexicon", fam:"lexicon", board:null, play:null,
+  blurb:"Piesa de bază. Mișcă de regulă doar înainte, un pătrat, și capturează prin săritură. Direcțiile de captură diferă de la o variantă la alta.", rules:[], facts:{}, sim:["lex-dama"]},
+ {id:"lex-colt", t:"Colțul dublu", type:"lexicon", fam:"lexicon", board:null, play:null,
+  blurb:"Cele două pătrate de refugiu dintr-un colț; o piesă acolo e mai greu de prins. Element-cheie de apărare în finaluri.", rules:[], facts:{}, sim:["lex-opozitie"]},
+ {id:"lex-oblig", t:"Captură obligatorie", type:"lexicon", fam:"lexicon", board:null, play:null,
+  blurb:"Regula aproape universală: dacă poți captura, ești obligat să o faci. Renunțarea la ea (jocul „relaxat”) schimbă fundamental tactica.", rules:[], facts:{}, sim:["lex-maxima","lex-suflare"]},
+ {id:"lex-maxima", t:"Captură maximă (majority rule)", type:"lexicon", fam:"lexicon", board:null, play:null,
+  blurb:"În internațional, brazilian, spaniol, italian etc. trebuie aleasă secvența care capturează cele mai multe piese — chiar dacă pierzi inițiativa pozițională.", rules:[], facts:{}, sim:["lex-oblig"]},
+ {id:"lex-zbur", t:"Damă zburătoare (flying king)", type:"lexicon", fam:"lexicon", board:null, play:null,
+  blurb:"Dama care se deplasează și capturează la orice distanță pe linia ei (diagonală sau, la turcească, ortogonală). Opusul damei „de un pătrat” din englez/italian.", rules:[], facts:{}, sim:["lex-dama"]},
+ {id:"lex-turc", t:"Lovitura turcească (Turkish strike)", type:"lexicon", fam:"lexicon", board:null, play:null,
+  blurb:"Piesele capturate într-o secvență se ridică abia la final; până atunci rămân pe tablă ca obstacole, iar aceeași piesă nu poate fi sărită de două ori.", rules:[], facts:{}, sim:["lex-maxima"]},
+ {id:"lex-suflare", t:"Suflarea (huffing)", type:"lexicon", fam:"lexicon", board:null, play:null,
+  blurb:"Regulă istorică abolită: dacă un jucător omitea o captură obligatorie, adversarul îi putea „sufla” (scoate) piesa. Azi captura e pur și simplu impusă.", rules:[], facts:{}, sim:["lex-oblig"]},
+ {id:"lex-opozitie", t:"Opoziție & tempo", type:"lexicon", fam:"lexicon", board:null, play:null,
+  blurb:"Concepte de final: cine e forțat să cedeze terenul. Stăpânirea tempo-ului decide multe finaluri de damă, exact ca la șah.", rules:[], facts:{}, sim:["lex-colt"]},
+ {id:"lex-notatie", t:"Notație numerică", type:"lexicon", fam:"lexicon", board:null, play:null,
+  blurb:"În internațional, pătratele jucabile se numerotează 1–50; o mutare se scrie 32-28, o captură 27x18. În acest atlas folosim notație de tip a1–h8 pentru claritate.", rules:[], facts:{}, sim:["lex-fmjd"]},
+ {id:"lex-fmjd", t:"FMJD", type:"lexicon", fam:"lexicon", board:null, play:null,
+  blurb:"Fédération Mondiale du Jeu de Dames — forul mondial al damei, care administrează regulile internaționalei și titlurile.", rules:[], facts:{}, sim:["intl"]},
+ {id:"lex-promovare", t:"Promovare", type:"lexicon", fam:"lexicon", board:null, play:null,
+  blurb:"Transformarea omului în damă la atingerea ultimului rând. Momentul diferă: englez (oprește mutarea), internațional (doar dacă te oprești acolo), rus (devine damă pe loc și continuă).", rules:[], facts:{}, sim:["lex-dama"]}
+];
+var BYID = {}; DATA.forEach(function(v){BYID[v.id]=v;});
+
+/* ---------------- prefs ---------------- */
+var LS="dff_";
+function lsGet(k,d){try{var v=localStorage.getItem(LS+k);return v===null?d:v;}catch(e){return d;}}
+function lsSet(k,v){try{localStorage.setItem(LS+k,v);}catch(e){}}
+function applyPrefs(){
+  if(lsGet("theme","dark")==="light") document.documentElement.setAttribute("data-theme","light");
+  if(lsGet("read","0")==="1") document.body.classList.add("readable");
+  var ts=lsGet("ts","0"); document.body.classList.remove("ts1","ts2"); if(ts==="1")document.body.classList.add("ts1"); if(ts==="2")document.body.classList.add("ts2");
+}
+function explored(){ try{return JSON.parse(lsGet("explored","[]"));}catch(e){return [];} }
+function markExplored(id){ var e=explored(); if(e.indexOf(id)<0){e.push(id);lsSet("explored",JSON.stringify(e));} renderExplored(); }
+function renderExplored(){ var e=explored(), n=e.length, pl=DATA.filter(function(v){return v.play;}).length; var el=$("#explored"); if(el) el.textContent="Variante explorate pe acest dispozitiv: "+n+" / "+pl+" jucabile."; }
+
+/* ---------------- UI state ---------------- */
+var UI={q:"", sort:"id", fam:"all", onlyPlay:false, onlyBeg:false};
+
+/* ---------------- stats ---------------- */
+function buildStats(){
+  var v=DATA.filter(function(x){return x.type==="variant";}).length;
+  var lx=DATA.filter(function(x){return x.type==="lexicon";}).length;
+  var pl=DATA.filter(function(x){return x.play;}).length;
+  var bg=DATA.filter(function(x){return x.beg;}).length;
+  var s=[["#stats", DATA.length,"Intrări"],[null,v,"Variante"],[null,pl,"Jucabile"],[null,lx,"Lexicon"],[null,bg,"Începători"],[null,"4","Mărimi tablă"]];
+  $("#stats").innerHTML = s.map(function(x){return '<div class="stat"><b>'+x[1]+'</b><span>'+x[2]+'</span></div>';}).join("");
+}
+
+/* ---------------- cards ---------------- */
+function dotsHTML(d){ var h=""; for(var i=1;i<=4;i++) h+='<i class="'+(i<=(d||0)?"on":"")+'"></i>'; return '<span class="dots" title="dificultate '+(d||0)+'/4">'+h+'</span>'; }
+function boardBadge(v){ return v.board?('<span class="tag">'+v.board+'×'+v.board+'</span>'):''; }
+function cardHTML(v){
+  var badges="";
+  if(v.play) badges+='<span class="badge play">▶ jucabil</span> ';
+  if(v.type==="lexicon") badges+='<span class="badge lex">lexicon</span> ';
+  if(v.approx) badges+='<span class="badge approx" title="implementare aproximativă">⚠</span> ';
+  var tags='<span class="tag">'+FAM[v.fam]+'</span>'+boardBadge(v)+(v.geo==="orth"?'<span class="tag">ortogonal</span>':'');
+  return '<button class="card" data-id="'+v.id+'">'+
+    '<div class="top"><div><h3>'+esc(v.t)+'</h3>'+(v.aka?('<div class="aka">'+esc(v.aka)+'</div>'):'')+'</div>'+(v.type==="variant"?dotsHTML(v.diff):'')+'</div>'+
+    '<div>'+badges+'</div>'+
+    '<div class="card-blurb">'+esc(v.blurb)+'</div>'+
+    '<div class="tags">'+tags+'</div>'+
+  '</button>';
+}
+function filtered(){
+  var q=UI.q.trim().toLowerCase();
+  var arr=DATA.filter(function(v){
+    if(UI.onlyPlay && !v.play) return false;
+    if(UI.onlyBeg && !v.beg) return false;
+    if(UI.fam!=="all" && v.fam!==UI.fam) return false;
+    if(q){ var hay=(v.t+" "+(v.aka||"")+" "+(v.reg||"")+" "+v.blurb+" "+(v.rules||[]).join(" ")).toLowerCase(); if(hay.indexOf(q)<0) return false; }
+    return true;
+  });
+  if(UI.sort==="az") arr.sort(function(a,b){return a.t.localeCompare(b.t,"ro");});
+  else if(UI.sort==="za") arr.sort(function(a,b){return b.t.localeCompare(a.t,"ro");});
+  else if(UI.sort==="du") arr.sort(function(a,b){return (a.diff||0)-(b.diff||0);});
+  else if(UI.sort==="dd") arr.sort(function(a,b){return (b.diff||0)-(a.diff||0);});
+  return arr;
+}
+function renderCards(){
+  var arr=filtered();
+  $("#count").textContent=arr.length+" "+(arr.length===1?"intrare":"intrări");
+  $("#cards").innerHTML = arr.length ? arr.map(cardHTML).join("") : '<div class="empty">Nicio intrare nu se potrivește. Încearcă alți termeni sau resetează filtrele.</div>';
+}
+function renderShelf(id, ids){ $(id).innerHTML = ids.map(function(x){return BYID[x]?cardHTML(BYID[x]):"";}).join(""); }
+
+/* ---------------- variant of the day ---------------- */
+function todayVariant(){
+  var d=new Date(); var key=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+  var pool=DATA.filter(function(v){return v.type==="variant";});
+  return pool[key % pool.length];
+}
+
+/* ---------------- modals ---------------- */
+function openOv(id){ var el=document.getElementById(id); el.classList.add("open"); el.scrollTop=0; }
+function closeOv(el){ el.classList.remove("open"); if(el.id==="pmodal" && P){P.gen++;} }
+function closeTop(){ var open=$$(".overlay.open"); if(open.length){ closeOv(open[open.length-1]); return true;} return false; }
+
+function openVariant(id){
+  var v=BYID[id]; if(!v) return;
+  $("#vfam").textContent=FAM[v.fam]+(v.type==="lexicon"?"":" · variantă");
+  $("#vtitle").textContent=v.t;
+  $("#vaka").textContent=v.aka||"";
+  var meta="";
+  if(v.type==="variant"){
+    if(v.board) meta+='<span class="tag">'+v.board+'×'+v.board+'</span>';
+    meta+='<span class="tag">'+(v.geo==="orth"?"ortogonal":"diagonal")+'</span>';
+    if(v.reg && v.reg!=="—") meta+='<span class="tag">'+esc(v.reg)+'</span>';
+    if(v.era && v.era!=="—") meta+='<span class="tag">'+esc(v.era)+'</span>';
+    meta+='<span class="tag">dificultate '+dotsTxt(v.diff)+'</span>';
+    if(v.play) meta+='<span class="badge play">▶ jucabil</span>';
+    if(v.approx) meta+='<span class="badge approx">⚠ aproximare</span>';
+  }
+  $("#vmeta").innerHTML=meta;
+  $("#vblurb").textContent=v.blurb;
+  $("#vrules").innerHTML=(v.rules&&v.rules.length)?v.rules.map(function(r){return '<li>'+esc(r)+'</li>';}).join(""):'<li style="opacity:.6">—</li>';
+  var f=v.facts||{}, fk=Object.keys(f);
+  $("#vfacts").innerHTML=fk.length?fk.map(function(k){return '<dt>'+esc(k)+'</dt><dd>'+esc(f[k])+'</dd>';}).join(""):'<dt style="opacity:.6">—</dt><dd></dd>';
+  $("#vsim").innerHTML=(v.sim&&v.sim.length)?v.sim.filter(function(s){return BYID[s];}).map(function(s){return '<button data-sim="'+s+'">'+esc(BYID[s].t)+'</button>';}).join(""):'<span style="color:var(--muted);font-size:.85rem">—</span>';
+  var bar=$("#vplaybar");
+  if(v.play){ bar.innerHTML='<button class="bigplay" id="goplay">▶ Joacă împotriva AI</button><span class="docnote">Motor local, fără rețea.'+(v.approx?' ⚠ Reguli aproximate.':'')+'</span>';
+    $("#goplay").onclick=function(){ openPlay(v); };
+  } else { bar.innerHTML='<span class="docnote">📖 Variantă documentată — motorul nu o implementează (încă). Mecanica ei specială '+(v.fam==="modern"||v.id==="lasca"||v.id==="bashni"?'(turnuri/mișcare liniară) ':'')+'depășește motorul generic actual.</span>'; }
+  openOv("vmodal");
+}
+function dotsTxt(d){ var s=""; for(var i=1;i<=4;i++) s+= i<=(d||0)?"●":"○"; return s; }
+
+/* ================= PLAY ================= */
+var P=null;
+function snap(){ return {board:P.board.slice(), side:P.side, clock:P.clock, ml:P.moves.length}; }
+function ruleConf(v){ var kind=engineOf(v); if(kind==="damath"||kind==="cheskers") return {}; var base=(kind==="tower"?TOWERS:ENGINES)[v.play]||{}; var c={}; for(var k in base) c[k]=base[k]; if(kind==="gen" && P && P.relaxed) c.captureMandatory=false; return c; }
+function openPlay(v){
+  P={v:v, side:"w", user:"w", level:(P&&P.level)||2, relaxed:false, moves:[], clock:0, sel:-1, next:[], cap:[], last:null, over:null, gen:(P?P.gen+1:1), thinking:false};
+  P.kind=engineOf(v); P.eng=moduleOf(P.kind);
+  P.rules=P.eng.normRules(ruleConf(v));
+  startBoard();
+  $("#ptitle").textContent=v.t;
+  setSeg("#sideseg","data-side",P.user);
+  setSeg("#levelseg","data-lvl",String(P.level));
+  $("#relaxbtn").setAttribute("aria-pressed","false");
+  markExplored(v.id);
+  openOv("pmodal");
+}
+function startBoard(){
+  P.board=P.eng.initialBoard(P.rules); P.side="w"; P.flip=(P.user==="b");
+  P.moves=[]; P.clock=0; P.sel=-1; P.next=[]; P.cap=[]; P.last=null; P.over=null; P.snaps=[snap()];
+  refresh(); maybeAI();
+}
+function setSeg(sel,attr,val){ $$(sel+" button").forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute(attr)===val ? "true":"false"); }); }
+function shortRules(){ var r=P.rules;
+  if(P.kind==="damath")   return "8×8 · scor aritmetic · + − × ÷";
+  if(P.kind==="cheskers") return "8×8 · hibrid șah · pion · nebun · cămilă";
+  if(P.kind==="tower")    return r.size+"×"+r.size+" · turnuri"+(r.flyingKings?" · damă zburătoare":" · damă de un pătrat");
+  var p=[]; p.push(r.size+"×"+r.size); p.push(r.geometry==="orth"?"ortogonal":(r.flyingKings?"damă zburătoare":"damă de un pătrat")); p.push(r.menCaptureBackward||r.geometry==="orth"?"capt. ±":"capt. înainte"); if(r.weightedMax)p.push("max ponderat"); else if(r.maxCapture)p.push("max"); if(r.giveaway)p.push("antidame"); if(!r.captureMandatory)p.push("relaxat"); return p.join(" · "); }
+
+function coord(sq,N){ return String.fromCharCode(97+(sq%N))+(N-((sq/N)|0)); }
+function notation(mv){ var N=P.rules.size, sep=mv.caps.length?"x":"-"; return mv.path.map(function(s){return coord(s,N);}).join(sep); }
+
+function refresh(){ renderBoard(); setStatus(); renderMoves(); $("#ruleshort").textContent=shortRules(); }
+function renderBoard(){
+  var N=P.rules.size, html="", dr,dc,r,c,sq,info,cls,inner,playable,dark,lbl,bg;
+  var orth = !!(P.rules.geometry==="orth" || P.rules.kingOrth || P.rules.menMoveOrth || P.rules.orthMen);
+  var par  = (P.kind==="tower") ? P.rules.parity : 1;
+  var el=$("#board"); el.style.setProperty("--n",N); el.className="board"+(orth?" orth":"")+(P.kind?(" k-"+P.kind):"");
+  for(dr=0;dr<N;dr++) for(dc=0;dc<N;dc++){
+    if(!P.flip){r=dr;c=dc;} else {r=N-1-dr;c=N-1-dc;}
+    sq=r*N+c;
+    playable = orth ? true : (((r+c)&1)===par);
+    dark = orth ? (((r+c)&1)===1) : playable;
+    cls="sq "+(dark?"d":"l");
+    if(!playable) cls+=" off";
+    if(P.sel===sq) cls+=" sel";
+    if(P.next.indexOf(sq)>=0) cls+=" move";
+    if(P.cap.indexOf(sq)>=0) cls+=" cap";
+    if(P.last && (P.last.from===sq||P.last.to===sq)) cls+=" last";
+    info = P.eng.cell(P.board, sq);
+    inner = info.empty ? "" : '<span class="pc '+info.cls+(info.glyph?" lbl":"")+'">'+(info.glyph?('<i class="g">'+esc(info.glyph)+'</i>'):"")+'</span>';
+    bg = (P.eng.cellBg && playable && info.empty) ? P.eng.cellBg(sq) : null;
+    if(bg) inner = '<i class="op">'+esc(bg)+'</i>'+inner;
+    lbl = coord(sq,N)+(info.empty?"":(" "+(info.cls.charAt(0)==="w"?"alb":"negru")));
+    html+='<button class="'+cls+'" data-sq="'+sq+'"'+((playable&&!P.over)?"":' tabindex="-1"')+' aria-label="'+lbl+'"><i class="dot"></i>'+inner+'</button>';
+  }
+  el.innerHTML=html;
+}
+function setStatus(){
+  var s=$("#pstatus"), w=pieceCount("w"), b=pieceCount("b"), txt;
+  if(P.over){
+    if(P.over==="draw") txt="Remiză.";
+    else txt=(P.over==="w"?"Albul":"Negrul")+" câștigă"+(P.rules.giveaway?" (a scăpat de piese)":"")+(P.kind==="damath"?" la scor":"")+". "+(P.over===P.user?"🎉":"");
+  } else if(P.thinking){ txt="AI gândește…"; }
+  else {
+    txt=(P.side===P.user?"Tu":"AI")+" la mutare — "+(P.side==="w"?"alb":"negru")+".";
+    if(P.eng.genMoves(P.board,P.rules,P.side).some(function(m){return m.caps.length;})) txt += (P.kind==="damath") ? "  (captura e opțională)" : "  Captură obligatorie!";
+  }
+  s.textContent=txt;
+  $("#pcount").textContent = (P.eng.meta?P.eng.meta(P.board):("Alb "+w+" · Negru "+b));
+  $("#pturn").className="turnchip "+(P.over?"over":P.side);
+}
+function renderMoves(){
+  var out="", i, n;
+  for(i=0;i<P.moves.length;i+=2){ n=(i/2)+1; out+='<span class="mv"><span class="no">'+n+'.</span> '+P.moves[i]+(P.moves[i+1]?(" "+P.moves[i+1]):"")+'</span>'; }
+  var el=$("#movelist"); el.innerHTML=out||'<span style="color:var(--muted)">Mutările apar aici.</span>'; el.scrollTop=el.scrollHeight;
+}
+function clearSel(){ P.sel=-1; P.next=[]; P.cap=[]; P.partial=[]; }
+function prefixMatch(path, pre){ if(path.length<pre.length) return false; for(var i=0;i<pre.length;i++) if(path[i]!==pre[i]) return false; return true; }
+function uniqNext(cands, depth){ var s=[],seen={}; cands.forEach(function(m){ if(m.path.length>depth){ var v=m.path[depth]; if(!seen[v]){seen[v]=1;s.push(v);} } }); return s; }
+
+function clickSq(sq){
+  if(!P || P.over || P.thinking || P.side!==P.user) return;
+  var legal=P.eng.genMoves(P.board,P.rules,P.side);
+  if(!P.partial || P.partial.length===0){
+    var starts=legal.filter(function(m){return m.path[0]===sq;});
+    if(!starts.length){ clearSel(); refresh(); return; }
+    P.sel=sq; P.partial=[sq]; P.next=uniqNext(starts,1); P.cap=(starts.length===1?starts[0].caps:[]); refresh(); return;
+  }
+  var cands=legal.filter(function(m){return prefixMatch(m.path,P.partial);});
+  var want=cands.filter(function(m){return m.path.length>P.partial.length && m.path[P.partial.length]===sq;});
+  if(want.length){
+    P.partial.push(sq);
+    var exact=want.filter(function(m){return m.path.length===P.partial.length;});
+    var longer=want.filter(function(m){return m.path.length>P.partial.length;});
+    if(exact.length && !longer.length){ doMove(exact[0]); return; }
+    P.sel=P.partial[0]; P.next=uniqNext(want,P.partial.length); P.cap=(want.length===1?want[0].caps:[]); refresh(); return;
+  }
+  var st=legal.filter(function(m){return m.path[0]===sq;});
+  if(st.length){ P.sel=sq; P.partial=[sq]; P.next=uniqNext(st,1); P.cap=(st.length===1?st[0].caps:[]); refresh(); return; }
+  clearSel(); refresh();
+}
+function doMove(mv){
+  var fp=P.board[mv.path[0]]; var wasMan = !!fp && !(fp.k);
+  P.board=P.eng.applyMove(P.board,P.rules,mv);
+  P.moves.push(notation(mv));
+  if(mv.caps.length || wasMan) P.clock=0; else P.clock++;
+  P.last={from:mv.path[0], to:mv.path[mv.path.length-1]};
+  P.side=other(P.side); clearSel();
+  P.snaps.push(snap());
+  evalEnd(); refresh();
+  if(!P.over) maybeAI();
+}
+function evalEnd(){
+  var res=P.eng.result(P.board,P.rules,P.side);
+  if(res){ P.over=res; return; }
+  var lim=P.rules.size>=10?60:50;
+  if(P.clock>=lim) P.over="draw";
+}
+function maybeAI(){
+  if(P.over || P.side===P.user) return;
+  P.thinking=true; var gen=P.gen; setStatus();
+  setTimeout(function(){
+    if(!P || P.gen!==gen || P.over) return;
+    var mv=P.eng.bestMove(P.board,P.rules,P.side,P.level);
+    P.thinking=false;
+    if(!mv){ P.over=P.rules.giveaway?P.side:other(P.side); refresh(); return; }
+    doMove(mv);
+  },240);
+}
+function hint(){
+  if(!P || P.over || P.thinking || P.side!==P.user) return;
+  var mv=P.eng.bestMove(P.board,P.rules,P.side,2);
+  if(mv){ P.sel=mv.path[0]; P.next=[mv.path[1]]; P.cap=mv.caps; P.partial=[mv.path[0]]; refresh(); }
+}
+function undo(){
+  if(!P || !P.snaps || P.snaps.length<=1) return;
+  P.gen++; P.thinking=false; // cancel pending AI
+  P.snaps.pop();
+  while(P.snaps.length>1 && P.snaps[P.snaps.length-1].side!==P.user) P.snaps.pop();
+  var s=P.snaps[P.snaps.length-1];
+  P.board=s.board.slice(); P.side=s.side; P.clock=s.clock; P.moves=P.moves.slice(0,s.ml);
+  P.over=null; P.last=null; clearSel(); refresh();
+  if(P.side!==P.user) maybeAI();
+}
+
+/* ---------------- export ---------------- */
+function download(name, text, mime){
+  var blob=new Blob([text],{type:mime||"text/plain"}), url=URL.createObjectURL(blob);
+  var a=document.createElement("a"); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(url);},500);
+}
+function exportCSV(){
+  var head=["id","titlu","familie","tabla","geometrie","jucabil","aproximare","dificultate","regiune","epoca","descriere"];
+  var rows=[head.join(",")];
+  DATA.forEach(function(v){
+    var row=[v.id,v.t,FAM[v.fam],v.board?(v.board+"x"+v.board):"",v.geo||"",v.play?"da":"nu",v.approx?"da":"nu",v.diff||"",(v.reg||""),(v.era||""),v.blurb];
+    rows.push(row.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"';}).join(","));
+  });
+  download("dame-fara-frontiere.csv", rows.join("\n"), "text/csv");
+}
+function exportBib(){
+  var y=new Date().getFullYear();
+  var bib="@misc{dame_fara_frontiere,\n  author = {Chiu\\c{t}\\u{a}, Alexandru-Ionu\\c{t}},\n  title  = {Dame f\\u{a}r\\u{a} frontiere --- Atlas variante de dame},\n  year   = {"+y+"},\n  note   = {Atelier Atlantykron, Centrul StrING. Aplica\\c{t}ie HTML offline, "+DATA.length+" intr\\u{a}ri},\n  howpublished = {\\url{https://alexio.tf/dame-fara-frontiere/}}\n}\n";
+  download("dame-fara-frontiere.bib", bib, "text/plain");
+}
+
+/* ---------------- wiring ---------------- */
+function famChips(){
+  var fams=["all"].concat(Object.keys(FAM));
+  $("#famchips").innerHTML=fams.map(function(f){ var lbl=f==="all"?"Toate":FAM[f]; return '<button class="chip" data-fam="'+f+'" aria-pressed="'+(f==="all"?"true":"false")+'">'+lbl+'</button>'; }).join("");
+}
+function init(){
+  applyPrefs(); buildStats(); famChips(); renderExplored();
+  $("#today").innerHTML=cardHTML(todayVariant());
+  renderShelf("#shelf-ess",["english","intl","russian","turkish","brazilian","giveaway"]);
+  renderShelf("#shelf-exo",["turkish","frisian","lasca","armenian","dameo","canadian","damath"]);
+  renderCards();
+
+  document.body.addEventListener("click", function(e){
+    var card=e.target.closest("[data-id]"); if(card){ openVariant(card.getAttribute("data-id")); return; }
+    var sim=e.target.closest("[data-sim]"); if(sim){ openVariant(sim.getAttribute("data-sim")); return; }
+    if(e.target.matches("[data-close]") || e.target.classList.contains("overlay")){ var ov=e.target.closest(".overlay")||e.target; if(ov.classList&&ov.classList.contains("overlay")) closeOv(ov); return; }
+  });
+
+  $("#q").addEventListener("input", function(e){ UI.q=e.target.value; renderCards(); });
+  $("#sort").addEventListener("change", function(e){ UI.sort=e.target.value; renderCards(); });
+  $("#famchips").addEventListener("click", function(e){ var b=e.target.closest("[data-fam]"); if(!b)return; UI.fam=b.getAttribute("data-fam"); $$("#famchips .chip").forEach(function(c){c.setAttribute("aria-pressed", c===b?"true":"false");}); renderCards(); });
+  $("#onlyplay").addEventListener("click", function(e){ UI.onlyPlay=!UI.onlyPlay; e.currentTarget.setAttribute("aria-pressed",UI.onlyPlay?"true":"false"); renderCards(); });
+  $("#onlybeg").addEventListener("click", function(e){ UI.onlyBeg=!UI.onlyBeg; e.currentTarget.setAttribute("aria-pressed",UI.onlyBeg?"true":"false"); renderCards(); });
+
+  $("#randbtn").addEventListener("click", randomVariant);
+  $("#themebtn").addEventListener("click", function(){ var on=document.documentElement.getAttribute("data-theme")==="light"; if(on){document.documentElement.removeAttribute("data-theme");lsSet("theme","dark");}else{document.documentElement.setAttribute("data-theme","light");lsSet("theme","light");} });
+  $("#tsbtn").addEventListener("click", function(){ var ts=lsGet("ts","0"); ts=String((parseInt(ts,10)+1)%3); lsSet("ts",ts); applyPrefs(); });
+  $("#readbtn").addEventListener("click", function(){ var on=document.body.classList.toggle("readable"); lsSet("read",on?"1":"0"); });
+  $("#helpbtn").addEventListener("click", function(){ openOv("hmodal"); });
+  $("#aboutbtn").addEventListener("click", function(){ openOv("amodal"); });
+  $("#csvbtn").addEventListener("click", exportCSV);
+  $("#bibbtn").addEventListener("click", exportBib);
+
+  $("#board").addEventListener("click", function(e){ var b=e.target.closest("button[data-sq]"); if(b) clickSq(parseInt(b.getAttribute("data-sq"),10)); });
+  $("#sideseg").addEventListener("click", function(e){ var b=e.target.closest("[data-side]"); if(!b||!P)return; P.user=b.getAttribute("data-side"); setSeg("#sideseg","data-side",P.user); P.gen++; startBoard(); });
+  $("#levelseg").addEventListener("click", function(e){ var b=e.target.closest("[data-lvl]"); if(!b||!P)return; P.level=parseInt(b.getAttribute("data-lvl"),10); setSeg("#levelseg","data-lvl",String(P.level)); });
+  $("#newbtn").addEventListener("click", function(){ if(P){P.gen++; startBoard();} });
+  $("#undobtn").addEventListener("click", undo);
+  $("#hintbtn").addEventListener("click", hint);
+  $("#relaxbtn").addEventListener("click", function(e){ if(!P)return; P.relaxed=!P.relaxed; e.currentTarget.setAttribute("aria-pressed",P.relaxed?"true":"false"); P.rules=P.eng.normRules(ruleConf(P.v)); P.gen++; startBoard(); });
+
+  document.addEventListener("keydown", function(e){
+    var typing=/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+    if(e.key==="Escape"){ closeTop(); return; }
+    if(e.key==="/" && !typing){ e.preventDefault(); $("#q").focus(); return; }
+    if(typing) return;
+    var k=e.key.toLowerCase();
+    if(k==="r") randomVariant();
+    else if(k==="t") $("#themebtn").click();
+    else if(k==="a") $("#tsbtn").click();
+    else if(k==="b"){ $("#onlybeg").click(); }
+    else if(k==="?") openOv("hmodal");
+  });
+}
+function randomVariant(){ var pool=DATA.filter(function(v){return v.type==="variant";}); openVariant(pool[Math.floor(Math.random()*pool.length)].id); }
+
+if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", init); else init();
+})();
+</script>
+</body>
+</html>
