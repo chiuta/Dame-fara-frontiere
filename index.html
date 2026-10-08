@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<meta charset="UTF-8">
 <!--
   ============================================================================
   Dame-fara-frontiere
@@ -24,7 +25,6 @@
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
 }
 </style>
-<meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self' blob: data:; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self' blob:; script-src 'self' 'unsafe-inline' blob:; connect-src 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
@@ -381,7 +381,7 @@ footer.site .fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
           <button data-lvl="3" aria-pressed="false">Avansat</button>
         </div>
       </div>
-      <div class="pstatus" id="pstatus"></div>
+      <div class="pstatus" id="pstatus" role="status" aria-live="polite"></div>
       <div class="boardwrap"><div class="board" id="board"></div></div>
       <div class="pmeta">
         <span><span class="turnchip" id="pturn"></span> <span id="pcount"></span></span>
@@ -436,7 +436,7 @@ footer.site .fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
       <h4>Onestitate</h4>
       <p style="color:var(--soft);margin:.2em 0 1em">Toate variantele au motor jucabil. Disclaimerul ⚠ marchează implementările aproximative: frizonă/armenească (direcții hibride), Dameo/Croda (fără mișcarea liniară a șirurilor), Bașni/Lasca (regulă „nu sări de două ori același turn"), Damath (schemă de numere/operatori standardizată local), Cheskers (reconstrucție a regulilor Golomb 1948), plus prioritățile de curte la italiană/cehă/spaniolă/română. Pentru analiză serioasă: KingsRow (checkers), Scan (internațional), Maximus (Turcia).</p>
       <h4>Autor</h4>
-      <p style="color:var(--soft);margin:.2em 0 0">Alexandru-Ionuț Chiuță (Alexio) — autor, dezvoltator, muzician. Proiect TROM · Editura Tornada · ASFAN-România · Centrul StrING.</p>
+      <p style="color:var(--soft);margin:.2em 0 0">Alexandru-Ionuț Chiuță (Alexio) — autor, dezvoltator, muzician. Proiect TROM · Editura Tornada · Centrul StrING.</p>
     </div>
   </div>
 </div>
@@ -482,7 +482,8 @@ footer.site .fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
       promotion: r.promotion||'stop',      // 'stop' | 'final' | 'continue'
       kingPriority: !!r.kingPriority,
       captureMandatory: r.captureMandatory!==false,
-      giveaway: !!r.giveaway
+      giveaway: !!r.giveaway,
+      darkOnly: !!r.darkOnly            // piesele rămân pe pătratele închise (Frisian)
     };
   }
 
@@ -546,7 +547,7 @@ footer.site .fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
         for(d=0;d<dirs.length;d++){ nr=r+dirs[d][0]; nc=c+dirs[d][1];
           if(!inB(nr,nc,N))continue; j=nr*N+nc; if(b[j]==null) moves.push({path:[i,j],caps:[],king:false}); }
       } else {
-        dirs=kingDirs(rules);
+        dirs=rules.darkOnly?DIAG:kingDirs(rules);   // Frisian: dama se mută doar diagonal (captură în 8 direcții)
         if(rules.flyingKings){
           for(d=0;d<dirs.length;d++){ nr=r+dirs[d][0]; nc=c+dirs[d][1];
             while(inB(nr,nc,N)&&b[nr*N+nc]==null){ moves.push({path:[i,nr*N+nc],caps:[],king:true}); nr+=dirs[d][0]; nc+=dirs[d][1]; } }
@@ -592,6 +593,7 @@ footer.site .fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
           if(!t||t.c===piece.c||capturedSet.has(mid)) continue;
           lr=nr+dr; lc=nc+dc;
           while(inB(lr,lc,N)&&work[lr*N+lc]==null){
+            if(rules.darkOnly&&((lr+lc)&1)===0){ lr+=dr; lc+=dc; continue; }
             land=lr*N+lc; extended=true;
             ns=new Set(capturedSet); ns.add(mid);
             captureFrom(work, rules, {c:piece.c,k:true}, startSq, land, ns, pathTail.concat([land]), results, N);
@@ -703,16 +705,16 @@ footer.site .fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     var maxDepth   = level===1?2   : (level===2?6   : 12);
     var deadline=now()+timeBudget, chosen=moves[0], chosenVal=-Infinity, d, ordered, i, nb, val, alpha, beta, localBest, localVal;
     for(d=1; d<=maxDepth; d++){
-      localBest=null; localVal=-Infinity; alpha=-Infinity; beta=Infinity;
+      var dn=true; localBest=null; localVal=-Infinity; alpha=-Infinity; beta=Infinity;
       ordered=moves.slice().sort(function(a,c){return c.caps.length-a.caps.length;});
       for(i=0;i<ordered.length;i++){
         nb=applyMove(b,rules,ordered[i]);
         val=-search(nb,rules,other(toMove),d-1,-beta,-alpha,deadline);
         if(val>localVal){localVal=val;localBest=ordered[i];}
         if(val>alpha)alpha=val;
-        if(now()>deadline)break;
+        if(now()>deadline){dn=false;break;}
       }
-      if(localBest){chosen=localBest;chosenVal=localVal;}
+      if(localBest&&(dn||d===1)){chosen=localBest;chosenVal=localVal;}
       if(now()>deadline)break;
       if(chosenVal>90000)break;
     }
@@ -897,10 +899,10 @@ footer.site .fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     var moves=genMoves(b,rules,toMove); if(!moves.length)return null; if(moves.length===1)return moves[0];
     var budget=level===1?120:(level===2?500:1100), maxD=level===1?2:(level===2?6:10), deadline=now()+budget;
     var chosen=moves[0], cv=-Infinity, d, ord, i, val, alpha, lb, lv;
-    for(d=1;d<=maxD;d++){ lb=null; lv=-Infinity; alpha=-Infinity; ord=moves.slice().sort(function(a,c){return c.caps.length-a.caps.length;});
+    for(d=1;d<=maxD;d++){ var dn=true; lb=null; lv=-Infinity; alpha=-Infinity; ord=moves.slice().sort(function(a,c){return c.caps.length-a.caps.length;});
       for(i=0;i<ord.length;i++){ val=-search(applyMove(b,rules,ord[i]),rules,other(toMove),d-1,-Infinity,-alpha,deadline);
-        if(val>lv){lv=val;lb=ord[i];} if(val>alpha)alpha=val; if(now()>deadline)break; }
-      if(lb){chosen=lb;cv=lv;} if(now()>deadline)break; if(cv>90000)break;
+        if(val>lv){lv=val;lb=ord[i];} if(val>alpha)alpha=val; if(now()>deadline){dn=false;break;} }
+      if(lb&&(dn||d===1)){chosen=lb;cv=lv;} if(now()>deadline)break; if(cv>90000)break;
     }
     if(level===1 && Math.random()<0.35) return moves[Math.floor(Math.random()*moves.length)];
     return chosen;
@@ -964,7 +966,7 @@ footer.site .fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     var nb=clone(b), from=mv.path[0], to=mv.path[mv.path.length-1], mover=nb[from], gain=moveGain(b, mv), i;
     for(i=0;i<mv.caps.length;i++) nb[mv.caps[i]]=null;
     nb[from]=null;
-    if(isPromoRow(to, mover.c)) mover.k=true;
+    if(mv.king || isPromoRow(to, mover.c)) mover.k=true;
     nb[to]=mover;
     if(mover.c==='w') nb.sw=round2(nb.sw+gain); else nb.sb=round2(nb.sb+gain);
     return nb;
@@ -995,11 +997,11 @@ footer.site .fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     var moves=genMoves(b, rl, toMove); if(!moves.length)return null; if(moves.length===1)return moves[0];
     var budget=level===1?140:(level===2?550:1100), maxD=level===1?2:(level===2?6:9), deadline=now()+budget;
     var chosen=moves[0], d, ord, i, val, alpha, lb, lv;
-    for(d=1;d<=maxD;d++){ lb=null; lv=-Infinity; alpha=-Infinity;
+    for(d=1;d<=maxD;d++){ var dn=true; lb=null; lv=-Infinity; alpha=-Infinity;
       ord=moves.slice().sort(function(a,c){return moveGain(b,c)-moveGain(b,a);});
       for(i=0;i<ord.length;i++){ val=-search(applyMove(b,rl,ord[i]),rl,other(toMove),d-1,-Infinity,-alpha,deadline);
-        if(val>lv){lv=val;lb=ord[i];} if(val>alpha)alpha=val; if(now()>deadline)break; }
-      if(lb)chosen=lb; if(now()>deadline)break;
+        if(val>lv){lv=val;lb=ord[i];} if(val>alpha)alpha=val; if(now()>deadline){dn=false;break;} }
+      if(lb&&(dn||d===1))chosen=lb; if(now()>deadline)break;
     }
     if(level===1 && Math.random()<0.3) return moves[Math.floor(Math.random()*moves.length)];
     return chosen;
@@ -1146,10 +1148,10 @@ footer.site .fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     var moves=genMoves(b,rl,toMove); if(!moves.length)return null; if(moves.length===1)return moves[0];
     var budget=level===1?140:(level===2?550:1100), maxD=level===1?2:(level===2?6:9), deadline=now()+budget;
     var chosen=moves[0], d, ord, i, v, alpha, lb, lv;
-    for(d=1;d<=maxD;d++){ lb=null; lv=-Infinity; alpha=-Infinity; ord=moves.slice().sort(function(a,c){return c.caps.length-a.caps.length;});
+    for(d=1;d<=maxD;d++){ var dn=true; lb=null; lv=-Infinity; alpha=-Infinity; ord=moves.slice().sort(function(a,c){return c.caps.length-a.caps.length;});
       for(i=0;i<ord.length;i++){ v=-search(applyMove(b,rl,ord[i]),rl,other(toMove),d-1,-Infinity,-alpha,deadline);
-        if(v>lv){lv=v;lb=ord[i];} if(v>alpha)alpha=v; if(now()>deadline)break; }
-      if(lb)chosen=lb; if(now()>deadline)break;
+        if(v>lv){lv=v;lb=ord[i];} if(v>alpha)alpha=v; if(now()>deadline){dn=false;break;} }
+      if(lb&&(dn||d===1))chosen=lb; if(now()>deadline)break;
     }
     if(level===1 && Math.random()<0.3) return moves[Math.floor(Math.random()*moves.length)];
     return chosen;
@@ -1190,8 +1192,8 @@ var ENGINES = {
   giveaway:    {size:8,  menCaptureBackward:true,  flyingKings:true,  maxCapture:false, promotion:"stop", giveaway:true},
   giveawayIntl:{size:10, menCaptureBackward:true,  flyingKings:true,  maxCapture:true,  promotion:"final", giveaway:true},
   /* extended engine: hybrid directions / weighted-max / custom starts */
-  diagonal:    {size:8,  start:"diagonal", menCaptureBackward:true, flyingKings:true, maxCapture:false, promotion:"stop"},
-  frisian:     {size:10, menCaptureBackward:true, orthMen:true, menOrthBackward:true, kingDiag:true, kingOrth:true, flyingKings:true, maxCapture:true, weightedMax:2, promotion:"final"},
+  diagonal:    {size:8,  start:"diagonal", promotion:"stop"},
+  frisian:     {size:10, menCaptureBackward:true, orthMen:true, menOrthBackward:true, kingDiag:true, kingOrth:true, flyingKings:true, maxCapture:true, weightedMax:1.5, darkOnly:true, promotion:"final"},
   armenian:    {size:8,  geometry:"orth", diagMen:true, orthMen:true, menCaptureBackward:true, menOrthBackward:true, menMoveDiag:true, menMoveOrth:true, kingDiag:true, kingOrth:true, flyingKings:true, maxCapture:true, promotion:"final"},
   dameo:       {size:8,  geometry:"orth", menOrthBackward:true, flyingKings:true, maxCapture:true, promotion:"final"},
   croda:       {size:8,  geometry:"orth", menOrthBackward:true, flyingKings:true, maxCapture:true, promotion:"final"}
@@ -1278,36 +1280,36 @@ var DATA = [
   rules:["Tablă 8×8, 16 piese / culoare","Mișcare/captură ortogonală (sus/jos/stânga/dreapta)","Omul nu merge înapoi","Damă zburătoare ortogonală","Captură maximă obligatorie"], facts:{"Piese":"16 / culoare","Geometrie":"ortogonală","Damă":"zburătoare (drept)","Maximă":"obligatorie"}, sim:["armenian"]},
 
  {id:"frisian", t:"Dame frizonă", aka:"Frysk damjen · 10×10", type:"variant", fam:"regional", board:10, geo:"diag", diff:4, beg:false, play:"frisian", engine:"gen", approx:true, reg:"Frizia (Olanda)", era:"sec. XIX",
-  blurb:"Probabil cea mai grea dama europeană: pe 10×10 dama capturează și ortogonal, nu doar diagonal, iar captura maximă e „ponderată” (o damă valorează mai mult decât doi oameni). Documentată — motorul nu o implementează încă.",
-  rules:["Tablă 10×10","Dama capturează și pe orizontală/verticală","Captură maximă PONDERATĂ (dama > oameni)","Reguli de repetiție stricte","Documentată, încă nejucabilă aici"], facts:{"Damă":"capturează diag + ortogonal","Maximă":"ponderată"}, sim:["intl"]},
+  blurb:"Probabil cea mai grea dama europeană: pe 10×10 dama capturează și ortogonal, nu doar diagonal, iar captura maximă e „ponderată” (o damă valorează mai mult decât un om, dar mai puțin decât doi). Joc aproximativ: lipsește regula celor maximum trei mutări consecutive ale aceleiași dame.",
+  rules:["Tablă 10×10","Dama capturează și pe orizontală/verticală","Captură maximă PONDERATĂ (1 damă = mai mult decât 1 om, mai puțin decât 2)","⚠ Regula „maximum trei mutări consecutive cu aceeași damă” nu e implementată","Motor aproximativ, jucabil împotriva AI"], facts:{"Damă":"capturează diag + ortogonal","Maximă":"ponderată"}, sim:["intl"]},
 
  {id:"armenian", t:"Dame armenească", aka:"Tama", type:"variant", fam:"ortogonal", board:8, geo:"orth", diff:3, beg:false, play:"armenian", engine:"gen", approx:true, reg:"Armenia", era:"—",
-  blurb:"Tama: omul se mișcă și capturează atât diagonal înainte, cât și ortogonal; dama zboară pe ambele tipuri de linii. Hibrid fascinant între diagonal și ortogonal. Deocamdată documentată.",
-  rules:["Tablă 8×8","Mișcare/captură diagonal + ortogonal","Damă zburătoare pe ambele","Documentată, încă nejucabilă"], facts:{"Geometrie":"diag + ortogonal","Damă":"zburătoare"}, sim:["turkish"]},
+  blurb:"Tama: omul se mișcă și capturează atât diagonal înainte, cât și ortogonal; dama zboară pe ambele tipuri de linii. Hibrid fascinant între diagonal și ortogonal. Motor aproximativ, jucabil împotriva AI.",
+  rules:["Tablă 8×8","Mișcare/captură diagonal + ortogonal","Damă zburătoare pe ambele","Motor aproximativ, jucabil împotriva AI"], facts:{"Geometrie":"diag + ortogonal","Damă":"zburătoare"}, sim:["turkish"]},
 
  {id:"dameo", t:"Dameo", aka:"Christian Freeling (2000)", type:"variant", fam:"modern", board:8, geo:"diag", diff:3, beg:false, play:"dameo", engine:"gen", approx:true, reg:"Olanda", era:"2000",
-  blurb:"Reinventare modernă elegantă: pionii merg ortogonal înainte și pot avansa în „șiruri” liniare, iar captura se face prin săritură. Documentată ca reper de design.",
-  rules:["Tablă 8×8","Pioni: mișcare ortogonală înainte","Deplasare liniară a unui șir de piese","Captură prin săritură","Documentată"], facts:{"Autor":"C. Freeling","An":"2000"}, sim:["croda","english"]},
+  blurb:"Reinventare modernă elegantă: pionii merg ortogonal înainte și pot avansa în „șiruri” liniare, iar captura se face prin săritură. ⚠ Mecanica originală a șirurilor liniare NU e implementată; aici se joacă o aproximare ortogonală.",
+  rules:["Tablă 8×8","Pioni: mișcare ortogonală înainte","Deplasare liniară a unui șir de piese","Captură prin săritură","⚠ Șirurile liniare nu sunt implementate (aproximare ortogonală)"], facts:{"Autor":"C. Freeling","An":"2000"}, sim:["croda","english"]},
 
  {id:"croda", t:"Croda", aka:"mișcare liniară", type:"variant", fam:"modern", board:8, geo:"diag", diff:3, beg:false, play:"croda", engine:"gen", approx:true, reg:"—", era:"sec. XXI",
-  blurb:"Variantă modernă cu deplasare liniară a grupurilor de piese, în spiritul lui Dameo. Documentată ca punct de plecare pentru experimente proprii.",
-  rules:["Tablă 8×8","Mișcare liniară a grupurilor","Documentată"], facts:{}, sim:["dameo"]},
+  blurb:"Variantă modernă cu deplasare liniară a grupurilor de piese, în spiritul lui Dameo. ⚠ Mișcarea liniară a grupurilor NU e implementată; aici se joacă aceeași aproximare ortogonală ca la Dameo.",
+  rules:["Tablă 8×8","Mișcare liniară a grupurilor (neimplementată)","⚠ Aproximare ortogonală, ca la Dameo"], facts:{}, sim:["dameo"]},
 
  {id:"lasca", t:"Lasca", aka:"Emanuel Lasker (1911)", type:"variant", fam:"modern", board:7, geo:"diag", diff:3, beg:false, play:"lasca", engine:"tower", approx:true, reg:"Germania", era:"1911",
   blurb:"Creată de campionul mondial de șah Emanuel Lasker: pe 7×7, piesele capturate NU se scot, ci sunt „prinse” sub piesa care capturează, formând turnuri. Cine controlează vârful conduce turnul.",
-  rules:["Tablă 7×7","Capturile creează turnuri (piese suprapuse)","Stăpânești turnul dacă piesa ta e deasupra","Documentată, mecanică de turnuri neimplementată"], facts:{"Autor":"E. Lasker","An":"1911","Special":"turnuri"}, sim:["bashni"]},
+  rules:["Tablă 7×7","Capturile creează turnuri (piese suprapuse)","Stăpânești turnul dacă piesa ta e deasupra","Motor de turnuri implementat (reguli aproximate)"], facts:{"Autor":"E. Lasker","An":"1911","Special":"turnuri"}, sim:["bashni"]},
 
  {id:"bashni", t:"Bașni", aka:"Башни · turnuri rusești", type:"variant", fam:"istoric", board:8, geo:"diag", diff:3, beg:false, play:"bashni", engine:"tower", approx:true, reg:"Rusia", era:"sec. XIX",
   blurb:"„Turnuri”: varianta rusească din care s-a inspirat Lasca. Capturile suprapun piesele în coloane, iar jocul devine despre stăpânirea turnurilor, nu despre eliminare.",
-  rules:["Tablă 8×8","Capturile suprapun piesele în turnuri","Controlul vârfului = controlul turnului","Documentată"], facts:{"Special":"turnuri"}, sim:["lasca","russian"]},
+  rules:["Tablă 8×8","Capturile suprapun piesele în turnuri","Controlul vârfului = controlul turnului","Motor de turnuri implementat (reguli aproximate)"], facts:{"Special":"turnuri"}, sim:["lasca","russian"]},
 
  {id:"cheskers", t:"Cheskers", aka:"Solomon Golomb (1948)", type:"variant", fam:"fantezie", board:8, geo:"diag", diff:3, beg:false, play:"cheskers", engine:"cheskers", approx:true, reg:"SUA", era:"1948",
-  blurb:"Hibrid dame–șah de Solomon Golomb: peste damele clasice adaugă piese inspirate din șah (un fel de „nebuni” și o piesă de tip vânător). Documentată ca un experiment ingenios.",
-  rules:["Tablă 8×8","Dame + piese de tip șah","Documentată"], facts:{"Autor":"S. Golomb","An":"1948"}, sim:["giveaway"]},
+  blurb:"Hibrid dame–șah de Solomon Golomb: peste damele clasice adaugă piese inspirate din șah (nebunul și cămila). ⚠ Aici e o reconstrucție aproximativă: originalul are și doi regi pe parte, iar capturile nebunului și cămilei sunt opționale.",
+  rules:["Tablă 8×8","Dame + nebun și cămilă","⚠ Reconstrucție aproximativă a regulilor"], facts:{"Autor":"S. Golomb","An":"1948"}, sim:["giveaway"]},
 
- {id:"damath", t:"Damath", aka:"dame matematic", type:"variant", fam:"modern", board:8, geo:"diag", diff:2, beg:false, play:"damath", engine:"damath", approx:true, reg:"Filipine", era:"1980",
+ {id:"damath", t:"Damath", aka:"dame matematic", type:"variant", fam:"modern", board:8, geo:"diag", diff:2, beg:false, play:"damath", engine:"damath", approx:true, reg:"Filipine", era:"1975–1980",
   blurb:"Joc educativ filipinez: pătratele poartă operații matematice, iar o captură valorează cât rezultatul calculului. Dama întâlnește aritmetica — folosit în școli.",
-  rules:["Tablă 8×8 cu operații pe pătrate","Capturile produc scor numeric","Câștigă cel cu scorul mai mare","Documentată"], facts:{"Scop":"educativ","Special":"scor matematic"}, sim:[]},
+  rules:["Tablă 8×8 cu operații pe pătrate","Capturile produc scor numeric","Câștigă cel cu scorul mai mare","⚠ Schema de numere/operatori e standardizată local"], facts:{"Scop":"educativ","Special":"scor matematic"}, sim:[]},
 
  {id:"giveaway", t:"Antidame (sinucigașă)", aka:"Giveaway · 8×8", type:"variant", fam:"fantezie", board:8, geo:"diag", diff:2, beg:false, play:"giveaway", approx:false, reg:"—", era:"—",
   blurb:"Scopul e inversat: câștigi dacă rămâi fără piese sau fără mutare. Captura e tot obligatorie, deci trebuie să-ți „dăruiești” piesele inteligent. Surprinzător de tactică.",
@@ -1318,8 +1320,8 @@ var DATA = [
   rules:["Tablă 10×10","Scop inversat (pierzi tot = câștigi)","Captură maximă obligatorie","Damă zburătoare"], facts:{"Scop":"inversat","Maximă":"obligatorie"}, sim:["giveaway"]},
 
  {id:"diagonal", t:"Dame diagonală", aka:"setup rotit · 8×8", type:"variant", fam:"fantezie", board:8, geo:"diag", diff:2, beg:false, play:"diagonal", engine:"gen", approx:true, reg:"—", era:"—",
-  blurb:"Reguli englezești, dar așezarea inițială e rotită — piesele pornesc pe celelalte colțuri, schimbând complet deschiderile. Documentată ca variantă de setup.",
-  rules:["Tablă 8×8","Reguli englezești","Așezare inițială rotită 90°","Documentată"], facts:{}, sim:["english"]},
+  blurb:"Reguli englezești, dar așezarea inițială e rotită — piesele pornesc pe celelalte colțuri, schimbând complet deschiderile. Motorul aplică regulile englezești; piesele se mișcă tot pe verticală, deci unele pornesc blocate pe rândul lor de promovare.",
+  rules:["Tablă 8×8","Reguli englezești","Așezare inițială rotită 90° (mișcarea nu e rotită)","⚠ 4 oameni pornesc pe propriul rând de promovare și rămân blocați"], facts:{}, sim:["english"]},
 
  /* ---- lexicon ---- */
  {id:"lex-dama", t:"Damă (king)", type:"lexicon", fam:"lexicon", board:null, play:null,
@@ -1519,7 +1521,7 @@ function setStatus(){
   } else if(P.thinking){ txt="AI gândește…"; }
   else {
     txt=(P.side===P.user?"Tu":"AI")+" la mutare — "+(P.side==="w"?"alb":"negru")+".";
-    if(P.eng.genMoves(P.board,P.rules,P.side).some(function(m){return m.caps.length;})) txt += (P.kind==="damath") ? "  (captura e opțională)" : "  Captură obligatorie!";
+    if(P.eng.genMoves(P.board,P.rules,P.side).some(function(m){return m.caps.length;})) txt += (P.kind==="damath"||P.relaxed) ? "  (captura e opțională)" : "  Captură obligatorie!";
   }
   s.textContent=txt;
   $("#pcount").textContent = (P.eng.meta?P.eng.meta(P.board):("Alb "+w+" · Negru "+b));
@@ -1556,7 +1558,7 @@ function clickSq(sq){
   clearSel(); refresh();
 }
 function doMove(mv){
-  var fp=P.board[mv.path[0]]; var wasMan = !!fp && !(fp.k);
+  var fp=P.board[mv.path[0]]; if(Array.isArray(fp)) fp=fp[fp.length-1]; var wasMan = !!fp && !fp.k && (fp.t===undefined || fp.t==="m");
   P.board=P.eng.applyMove(P.board,P.rules,mv);
   P.moves.push(notation(mv));
   if(mv.caps.length || wasMan) P.clock=0; else P.clock++;
@@ -1611,7 +1613,7 @@ function exportCSV(){
     var row=[v.id,v.t,FAM[v.fam],v.board?(v.board+"x"+v.board):"",v.geo||"",v.play?"da":"nu",v.approx?"da":"nu",v.diff||"",(v.reg||""),(v.era||""),v.blurb];
     rows.push(row.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"';}).join(","));
   });
-  download("dame-fara-frontiere.csv", rows.join("\n"), "text/csv");
+  download("dame-fara-frontiere.csv", "\ufeff"+rows.join("\n"), "text/csv;charset=utf-8");
 }
 function exportBib(){
   var y=new Date().getFullYear();
@@ -1663,6 +1665,7 @@ function init(){
   document.addEventListener("keydown", function(e){
     var typing=/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
     if(e.key==="Escape"){ closeTop(); return; }
+    if($$(".overlay.open").length) return; /* scurtăturile globale nu se aplică peste ferestre deschise */
     if(e.key==="/" && !typing){ e.preventDefault(); $("#q").focus(); return; }
     if(typing) return;
     var k=e.key.toLowerCase();
