@@ -107,6 +107,7 @@ button.btn.gold{border-color:var(--gold2)}
   border-radius:999px;padding:6px 13px;cursor:pointer;transition:.15s}
 .chip:hover{color:var(--text);border-color:var(--gold)}
 .chip[aria-pressed="true"],.chip.on{background:var(--gold);color:#1a1306;border-color:var(--gold);font-weight:600}
+[data-theme="light"] .chip[aria-pressed="true"],[data-theme="light"] .chip.on{color:#fff;background:var(--gold2);border-color:var(--gold2)}
 .chip.tgl[aria-pressed="true"]{background:var(--accent);color:#06140f;border-color:var(--accent)}
 
 /* sections */
@@ -120,7 +121,7 @@ section.block{padding:26px 0 6px}
 #today{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:14px}
 
 /* card */
-.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
+.card{color:var(--text);background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
   border-radius:var(--radius);padding:15px 16px 14px;cursor:pointer;position:relative;
   transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;display:flex;flex-direction:column;gap:9px;text-align:left}
 .card:hover{transform:translateY(-3px);border-color:var(--line2);box-shadow:0 12px 30px rgba(0,0,0,.28)}
@@ -1702,7 +1703,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
 @media (max-width:560px){#tf-donate .tf-lbl{display:none}}
 @media print{#tf-donate{display:none}}
 </style>
-<input type="checkbox" id="tf-donate-cb" class="tf-cb" aria-hidden="true">
+<input type="checkbox" id="tf-donate-cb" class="tf-cb" aria-hidden="true" tabindex="-1">
 <div class="tf-panel">
 <span class="tf-lbl">Sprijină:</span>
 <a class="tf-b tf-pat" href="https://www.patreon.com/c/alexio_tf" target="_blank" rel="noopener" aria-label="Sprijină pe Patreon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="15.4" cy="9.4" r="6.6" fill="currentColor"/><rect x="2.4" y="2.4" width="3.7" height="19.2" fill="currentColor"/></svg>Patreon</a>

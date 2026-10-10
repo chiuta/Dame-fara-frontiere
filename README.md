@@ -43,6 +43,10 @@ Descarcă `index.html` și deschide-l în browser; nu necesită internet.
 
 Licența nu este încă declarată explicit în acest repository; vezi nota din aplicație. Aplicația conține în comentariul din cod o dedicare CC0 1.0, iar în subsolul interfeței menționează „CC-BY-SA 4.0”; cele două mențiuni nu coincid.
 
+## Audit
+
+Audit: 2026-10-10 — verificat cu Playwright și axe-core (WCAG 2.1 AA, ambele teme); verificat în cod: fără `fetch`/CDN. Corectate: culoarea titlurilor de card (nu moștenea culoarea paginii pe sistemele cu temă luminoasă), contrast pe butonul activ în tema luminoasă, un checkbox decorativ focalizabil.
+
 ## Autor
 
 Alexio — Alexandru-Ionuț Chiuță, contact: alexio@trom.tf. Aplicația menționează Atlantykron, Editura Tornada și Centrul StrING.
