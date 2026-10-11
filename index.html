@@ -267,7 +267,7 @@ footer.site .fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
   </div>
 </header>
 
-<div class="toolbar">
+<div class="toolbar" role="search" aria-label="Căutare și filtre">
   <div class="wrap">
     <div class="trow">
       <label class="search">
@@ -1394,15 +1394,21 @@ function cardHTML(v){
     '<div class="tags">'+tags+'</div>'+
   '</button>';
 }
+function foldTxt(x){ x=String(x||"").toLowerCase(); try{ x=x.normalize("NFD").replace(/[\u0300-\u036f]/g,""); }catch(e){} return x; }
 function filtered(){
-  var q=UI.q.trim().toLowerCase();
+  var qs=foldTxt(UI.q.trim()).split(/\s+/).filter(Boolean), score={};
   var arr=DATA.filter(function(v){
     if(UI.onlyPlay && !v.play) return false;
     if(UI.onlyBeg && !v.beg) return false;
     if(UI.fam!=="all" && v.fam!==UI.fam) return false;
-    if(q){ var hay=(v.t+" "+(v.aka||"")+" "+(v.reg||"")+" "+v.blurb+" "+(v.rules||[]).join(" ")).toLowerCase(); if(hay.indexOf(q)<0) return false; }
+    if(qs.length){
+      var head=foldTxt(v.t+" "+(v.aka||"")), mid=foldTxt(v.reg||""), hay=head+" "+mid+" "+foldTxt(v.blurb+" "+(v.rules||[]).join(" "));
+      for(var i=0;i<qs.length;i++){ if(hay.indexOf(qs[i])<0) return false; }
+      score[v.id]=qs.every(function(w){return head.indexOf(w)>=0;})?0:(qs.every(function(w){return (head+" "+mid).indexOf(w)>=0;})?1:2);
+    }
     return true;
   });
+  if(qs.length && UI.sort==="id") arr.sort(function(a,b){return (score[a.id]-score[b.id]) || (DATA.indexOf(a)-DATA.indexOf(b));});
   if(UI.sort==="az") arr.sort(function(a,b){return a.t.localeCompare(b.t,"ro");});
   else if(UI.sort==="za") arr.sort(function(a,b){return b.t.localeCompare(a.t,"ro");});
   else if(UI.sort==="du") arr.sort(function(a,b){return (a.diff||0)-(b.diff||0);});
@@ -1411,7 +1417,10 @@ function filtered(){
 }
 function renderCards(){
   var arr=filtered();
-  $("#count").textContent=arr.length+" "+(arr.length===1?"intrare":"intrări");
+  $("#count").textContent=arr.length+(arr.length<DATA.length?" din "+DATA.length:"")+" "+(arr.length===1&&arr.length===DATA.length?"intrare":"intrări");
+  var searching=!!UI.q.trim();
+  var blocks=document.querySelectorAll("section.block");
+  for(var bi=0;bi<blocks.length-1;bi++) blocks[bi].hidden=searching;
   $("#cards").innerHTML = arr.length ? arr.map(cardHTML).join("") : '<div class="empty">Nicio intrare nu se potrivește. Încearcă alți termeni sau resetează filtrele.</div>';
 }
 function renderShelf(id, ids){ $(id).innerHTML = ids.map(function(x){return BYID[x]?cardHTML(BYID[x]):"";}).join(""); }
@@ -1683,7 +1692,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
 })();
 </script>
 <!-- tf-donate: sprijin voluntar (Patreon + Buy Me a Coffee) — self-contained, fără resurse externe, fără JS -->
-<div id="tf-donate" aria-label="Sprijină autorul">
+<div id="tf-donate" role="complementary" aria-label="Sprijină autorul">
 <style>
 #tf-donate{position:fixed;right:14px;bottom:14px;z-index:2147483600;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1}
 #tf-donate *{box-sizing:border-box}
