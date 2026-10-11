@@ -15,6 +15,7 @@ Dame fără frontiere este un atlas interactiv al familiei de jocuri de dame (re
 - 25 de variante (internațională, englezească, braziliană, rusească, canadiană, italiană, spaniolă, portugheză, cehă, germană, pool, varianta uzuală RO, thailandeză, turcească, frizonă, armenească, Dameo, Croda, Lasca, Bașni, Cheskers, Damath, antidame, antidame internațională, dame diagonală) și 12 intrări de lexicon (damă, captură obligatorie, captură maximă, damă zburătoare, notație numerică, FMJD, promovare etc.).
 - Căutare, sortare (ordine recomandată, titlu A→Z / Z→A, dificultate crescătoare / descrescătoare), filtre „Doar jucabile” și „Începători”, „Varianta de astăzi” (aleasă determinist după dată), „Surprinde-mă”.
 - Joc local „Joacă local · vs AI”: alegi culoarea (Albe / Negre) și nivelul (Ușor / Mediu / Avansat), cu „Joc nou”, „Anulează”, „Indiciu” și „Mod relaxat” (captură neobligatorie).
+- „⧉ Copiază partida” și „⤓ Salvează .txt” în fereastra de joc: antet (variantă, tablă, nivel, rezultat) și mutările în notație pe coordonate (nu PDN oficial); generate local.
 - Motoare locale: generic parametrizat, de turnuri (Bașni, Lasca), de scor aritmetic (Damath) și hibrid șah×dame (Cheskers), cu căutare alpha-beta. Aplicația avertizează cu ⚠ variantele implementate aproximativ.
 - Export CSV al listei și citare BibTeX.
 - Temă luminoasă/întunecată, mărime text „lizibil”.
@@ -47,9 +48,10 @@ CC0 1.0 Universal (dedicare în domeniul public) — vezi fișierul `LICENSE`. A
 
 Ultima actualizare: 11 octombrie 2026.
 
+- Adăugat export al partidei curente (copiere / .txt); CSP: `script-src` pe hash SHA-256 (5 scripturi), fără `'unsafe-inline'`. Verificat: căutarea „englez” lasă 6 carduri vizibile (contorul arată „6 din 37 intrări”; cardurile din rafturile ascunse rămân în DOM, dar nu sunt afișate).
 - Căutarea ignoră diacriticele, acceptă mai multe cuvinte (toate trebuie să apară), ordonează rezultatele cu potriviri în titlu primele și ascunde rafturile „Varianta de astăzi / Esențiale / Exotice” cât timp căutarea e activă; contorul arată „N din 37 intrări”.
 - Bara de căutare și filtre este reper `role="search"`, iar widgetul de sprijin este `complementary`; axe-core: 0 violări la 1280 și 360 px.
-- Analiza și notația de partide rămân în afara domeniului aplicației (limită declarată).
+- Analiza de partide rămâne în afara domeniului aplicației (limită declarată).
 
 ## Mărci
 

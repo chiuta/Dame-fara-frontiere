@@ -25,7 +25,7 @@
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
 }
 </style>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self' blob: data:; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self' blob:; script-src 'self' 'unsafe-inline' blob:; connect-src 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self' blob: data:; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self' blob:; script-src 'self' blob: 'sha256-RSlYofqKbjvX4Un6ohgvB4lnNMIEZ1m+21fqBHCvT6s=' 'sha256-pAWxGlw5xh/lThzf38FRNlAOyxQGdpBA5CLgybzBptE=' 'sha256-sSR3FVC5OZ7FkhfFlf+J2cS3o7flot1mZFL66YMXJDk=' 'sha256-VDkunBB7aMrUazzzyAqyVCk1baD+nInoJJj1yKeM218=' 'sha256-1qDov2Kj8iUzJCQsACriJJYW3HOMILpdhieikawmqzw='; connect-src 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#0c0d10">
@@ -392,9 +392,12 @@ footer.site .fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
         <button class="btn" id="newbtn">↺ Joc nou</button>
         <button class="btn" id="undobtn">↶ Anulează</button>
         <button class="btn" id="hintbtn">💡 Indiciu</button>
+        <button class="btn" id="copybtn" title="Copiază mutările în notație pe coordonate (nu PDN oficial)">⧉ Copiază partida</button>
+        <button class="btn" id="savebtn" title="Descarcă partida ca fișier .txt">⤓ Salvează .txt</button>
         <button class="chip tgl" id="relaxbtn" aria-pressed="false">Mod relaxat (captură neobligatorie)</button>
       </div>
       <div class="movelist" id="movelist" aria-label="Lista mutărilor"></div>
+      <div class="pmeta" id="expmsg" role="status" aria-live="polite" style="min-height:1.2em;justify-content:center"></div>
     </div>
   </div>
 </div>
@@ -1669,6 +1672,39 @@ function init(){
   $("#levelseg").addEventListener("click", function(e){ var b=e.target.closest("[data-lvl]"); if(!b||!P)return; P.level=parseInt(b.getAttribute("data-lvl"),10); setSeg("#levelseg","data-lvl",String(P.level)); });
   $("#newbtn").addEventListener("click", function(){ if(P){P.gen++; startBoard();} });
   $("#undobtn").addEventListener("click", undo);
+  function gameText(){
+    var lines=[], i, n, res;
+    if(P.over==="draw") res="1/2-1/2"; else if(P.over==="w") res="1-0"; else if(P.over==="b") res="0-1"; else res="*";
+    lines.push("Varianta: "+P.v.t);
+    lines.push("Tabla: "+shortRules());
+    lines.push("Data: "+new Date().toISOString().slice(0,10));
+    lines.push("Alb: "+(P.user==="w"?"om":"AI")+" · Negru: "+(P.user==="b"?"om":"AI")+" · Nivel AI: "+({1:"ușor",2:"mediu",3:"avansat"}[P.level]||P.level));
+    if(P.relaxed) lines.push("Mod relaxat: captura neobligatorie");
+    lines.push("Rezultat: "+res+(P.over?"":" (partidă neterminată)"));
+    lines.push("Notație pe coordonate (coloană+rând; „-” mutare, „x” captură); nu este PDN oficial.");
+    lines.push("");
+    for(i=0;i<P.moves.length;i+=2){ n=(i/2)+1; lines.push(n+". "+P.moves[i]+(P.moves[i+1]?" "+P.moves[i+1]:"")); }
+    if(!P.moves.length) lines.push("(nicio mutare încă)");
+    lines.push("");
+    lines.push("Generat local de Dame fără frontiere.");
+    return lines.join("\n");
+  }
+  function expMsg(t){ var e=$("#expmsg"); e.textContent=t; }
+  $("#copybtn").addEventListener("click", function(){
+    if(!P) return;
+    var txt=gameText();
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ expMsg("Partida a fost copiată."); }, function(){ expMsg("Copierea nu a reușit; folosește „Salvează .txt”."); });
+    } else expMsg("Clipboard indisponibil; folosește „Salvează .txt”.");
+  });
+  $("#savebtn").addEventListener("click", function(){
+    if(!P) return;
+    var blob=new Blob([gameText()],{type:"text/plain;charset=utf-8"}), a=document.createElement("a");
+    a.href=URL.createObjectURL(blob); a.download="partida-"+(P.v.id||"dame")+".txt";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); },1000);
+    expMsg("Partida a fost descărcată.");
+  });
   $("#hintbtn").addEventListener("click", hint);
   $("#relaxbtn").addEventListener("click", function(e){ if(!P)return; P.relaxed=!P.relaxed; e.currentTarget.setAttribute("aria-pressed",P.relaxed?"true":"false"); P.rules=P.eng.normRules(ruleConf(P.v)); P.gen++; startBoard(); });
 
