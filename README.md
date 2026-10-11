@@ -41,7 +41,11 @@ Descarcă `index.html` și deschide-l în browser; nu necesită internet.
 
 ## Licență
 
-Licența nu este încă declarată explicit în acest repository; vezi nota din aplicație. Aplicația conține în comentariul din cod o dedicare CC0 1.0, iar în subsolul interfeței menționează „CC-BY-SA 4.0”; cele două mențiuni nu coincid.
+CC0 1.0 Universal (dedicare în domeniul public) — vezi fișierul `LICENSE`. Antetul din `index.html` și textul din interfață indică aceeași licență (o mențiune anterioară „CC-BY-SA 4.0” din interfață a fost eliminată la audit, 2026-10-11, pentru a elimina contradicția).
+
+## Mărci
+
+Numele de jocuri sunt denumiri comerciale ale deținătorilor lor, folosite descriptiv; proiectul nu este afiliat cu aceștia.
 
 ## Audit
 
@@ -53,4 +57,4 @@ Alexio — Alexandru-Ionuț Chiuță, contact: alexio@trom.tf. Aplicația menți
 
 ## English summary
 
-An atlas of 25 draughts/checkers variants plus 12 lexicon entries, with local AI opponents (alpha-beta search) for playable variants. Single HTML file, Romanian interface, no external requests; theme and explored variants are stored in localStorage (`dff_` prefix). The license statements inside the app are inconsistent (CC0 in code comment, CC-BY-SA 4.0 in footer), so it is marked undeclared here.
+An atlas of 25 draughts/checkers variants plus 12 lexicon entries, with local AI opponents (alpha-beta search) for playable variants. Single HTML file, Romanian interface, no external requests; theme and explored variants are stored in localStorage (`dff_` prefix). Licensed CC0 1.0 (see LICENSE).
