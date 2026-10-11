@@ -48,6 +48,7 @@ CC0 1.0 Universal (dedicare în domeniul public) — vezi fișierul `LICENSE`. A
 
 Ultima actualizare: 11 octombrie 2026.
 
+- Runda 7: tabla în tema întunecată are acum pătrate clar distincte (contrast ≈ 3:1) și piese negre cu contur deschis; în Damath operatorii (+ − × ÷) și valorile de pe piese, precum și literele pieselor din Cheskers, erau scrise cu ~4,5 px și acum se scalează cu dimensiunea tablei (≈ 13–22 px); titlurile din ferestre (Reguli cheie, Date rapide, Scurtături etc.) sunt `h3` (ierarhie corectă, axe `heading-order`); butonul „Joacă împotriva AI” și selectorul „Albe/Negre” respectă contrastul în tema luminoasă; tema implicită urmează `prefers-color-scheme` când nu există o alegere salvată.
 - Adăugat export al partidei curente (copiere / .txt); CSP: `script-src` pe hash SHA-256 (5 scripturi), fără `'unsafe-inline'`. Verificat: căutarea „englez” lasă 6 carduri vizibile (contorul arată „6 din 37 intrări”; cardurile din rafturile ascunse rămân în DOM, dar nu sunt afișate).
 - Căutarea ignoră diacriticele, acceptă mai multe cuvinte (toate trebuie să apară), ordonează rezultatele cu potriviri în titlu primele și ascunde rafturile „Varianta de astăzi / Esențiale / Exotice” cât timp căutarea e activă; contorul arată „N din 37 intrări”.
 - Bara de căutare și filtre este reper `role="search"`, iar widgetul de sprijin este `complementary`; axe-core: 0 violări la 1280 și 360 px.
