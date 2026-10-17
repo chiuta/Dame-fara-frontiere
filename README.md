@@ -57,7 +57,7 @@ Descarcă `index.html` și deschide-l în browser; nu necesită internet.
 
 ## Licență
 
-CC0 1.0 Universal (dedicare în domeniul public) — vezi fișierul `LICENSE`. Antetul din `index.html` și textul din interfață indică aceeași licență (o mențiune anterioară „CC-BY-SA 4.0” din interfață a fost eliminată la audit, 2026-10-11, pentru a elimina contradicția).
+Licență MIT — vezi fișierul `LICENSE`. Antetul din `index.html` și textul din interfață indică aceeași licență (o mențiune anterioară „CC-BY-SA 4.0” din interfață a fost eliminată la audit, 2026-10-11, pentru a elimina contradicția).
 
 ## Istoric / Changelog
 
@@ -83,4 +83,4 @@ Alexio — Alexandru-Ionuț Chiuță, contact: alexio@trom.tf. Aplicația menți
 
 ## English summary
 
-An atlas of 25 draughts/checkers variants plus 12 lexicon entries, with local AI opponents (alpha-beta search) for playable variants. Single HTML file, Romanian interface, no external requests; theme and explored variants are stored in localStorage (`dff_` prefix). Since 1.1.0: a "Game table" with two-player online play over WebRTC (manual signalling, no server), a simple local analyzer, a deterministic daily puzzle, "why can't I move?" explanations, keyboard play with spoken announcements, and a local Elo tournament. Licensed CC0 1.0 (see LICENSE).
+An atlas of 25 draughts/checkers variants plus 12 lexicon entries, with local AI opponents (alpha-beta search) for playable variants. Single HTML file, Romanian interface, no external requests; theme and explored variants are stored in localStorage (`dff_` prefix). Since 1.1.0: a "Game table" with two-player online play over WebRTC (manual signalling, no server), a simple local analyzer, a deterministic daily puzzle, "why can't I move?" explanations, keyboard play with spoken announcements, and a local Elo tournament. Licensed MIT (see LICENSE).
