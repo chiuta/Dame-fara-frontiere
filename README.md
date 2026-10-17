@@ -49,7 +49,7 @@ Teste: `node tests/fff-r8.test.mjs` (Playwright, rețea blocată, 2 pagini pentr
 ## Confidențialitate și rețea
 
 - **Stocare locală:** `localStorage`, chei cu prefixul `dff_` (temă, mod lizibil, variante explorate, un marcaj intern) și `dff_r8_` (preferințe de anunțuri/voce, turneu, serie zilnică, cache-ul problemei zilei); kitul FFF adaugă copie de siguranță (export/import/ștergere) și fereastra „Transparență” din numărul versiunii.
-- **Rețea:** în cod nu există `fetch`, CDN sau resurse externe (egress declarat: 0); singura comunicare este jocul în doi opțional, prin WebRTC direct între cei doi jucători, cu semnalizare manuală (coduri schimbate de voi) și, doar dacă introduci unul, un server STUN; aplicația afirmă „0 resurse externe”, fără cont și fără tracking. Linkurile către Patreon, Buy Me a Coffee, creativecommons.org sau alexio.tf sunt simple hiperlegături, deschise doar la click.
+- **Rețea:** în cod nu există `fetch`, CDN sau resurse externe (egress declarat: 0); singura comunicare este jocul în doi opțional, prin WebRTC direct între cei doi jucători, cu semnalizare manuală (coduri schimbate de voi) și, doar dacă introduci unul, un server STUN; aplicația afirmă „0 resurse externe”, fără cont și fără tracking. Linkurile către Buy Me a Coffee, creativecommons.org sau alexio.tf sunt simple hiperlegături, deschise doar la click.
 
 ## Rulare locală / offline
 
