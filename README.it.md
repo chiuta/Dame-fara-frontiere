@@ -85,6 +85,5 @@ Audit: 2026-10-10 — verificato con Playwright e axe-core (WCAG 2.1 AA, entramb
 
 Alexio — Alexandru-Ionuț Chiuță, contatto: alexio@trom.tf. L'applicazione menziona Atlantykron, Editura Tornada e Centrul StrING.
 
-## Riepilogo in inglese
-
+## Riepilogo
 Un atlante di 25 varianti della dama più 12 voci di lessico, con avversari IA locali (ricerca alfa-beta) per le varianti giocabili. Un unico file HTML, interfaccia in rumeno, nessuna richiesta esterna; il tema e le varianti esplorate sono salvati in localStorage (prefisso `dff_`). Dalla 1.1.0: un «Tavolo da gioco» con partita in due online tramite WebRTC (segnalazione manuale, senza server), un semplice analizzatore locale, un problema giornaliero deterministico, spiegazioni «perché non posso muovere?», gioco da tastiera con annunci vocali e un torneo Elo locale. Con licenza MIT (vedi LICENSE).

@@ -85,6 +85,5 @@ Audit: 2026-10-10 — geprüft mit Playwright und axe-core (WCAG 2.1 AA, beide D
 
 Alexio — Alexandru-Ionuț Chiuță, Kontakt: alexio@trom.tf. Die App erwähnt Atlantykron, Editura Tornada und Centrul StrING.
 
-## Zusammenfassung auf Englisch
-
+## Zusammenfassung
 Ein Atlas von 25 Dame-Varianten plus 12 Lexikoneinträgen, mit lokalen KI-Gegnern (Alpha-Beta-Suche) für spielbare Varianten. Eine einzige HTML-Datei, rumänische Oberfläche, keine externen Anfragen; Design und erkundete Varianten werden in localStorage gespeichert (Präfix `dff_`). Seit 1.1.0: ein „Spieltisch“ mit Online-Spiel zu zweit über WebRTC (manuelle Signalisierung, ohne Server), ein einfacher lokaler Analysator, eine deterministische Tagesaufgabe, Erklärungen „Warum kann ich nicht ziehen?“, Tastaturspiel mit gesprochenen Ansagen und ein lokales Elo-Turnier. MIT-lizenziert (siehe LICENSE).

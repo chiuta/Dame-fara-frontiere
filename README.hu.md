@@ -85,6 +85,5 @@ Audit: 2026-10-10 — Playwrighttal és axe-core-ral ellenőrizve (WCAG 2.1 AA, 
 
 Alexio — Alexandru-Ionuț Chiuță, kapcsolat: alexio@trom.tf. Az alkalmazás megemlíti az Atlantykront, az Editura Tornadát és a Centrul StrINGet.
 
-## Angol nyelvű összefoglaló
-
+## Összefoglaló
 A dámajáték 25 változatának atlasza, plusz 12 lexikonbejegyzés, a játszható változatokhoz helyi MI-ellenfelekkel (alfa-béta keresés). Egyetlen HTML-fájl, román nyelvű felület, külső kérések nélkül; a téma és a felfedezett változatok a localStorage-ban tárolódnak (`dff_` előtag). Az 1.1.0 óta: „Játékasztal” kétszemélyes online játékkal WebRTC-n keresztül (kézi jelzés, szerver nélkül), egy egyszerű helyi elemző, egy determinisztikus napi feladat, „miért nem léphetek?” magyarázatok, billentyűzetes játék kimondott bejelentésekkel és egy helyi Elo-verseny. MIT-licenc (lásd LICENSE).
