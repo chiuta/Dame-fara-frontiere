@@ -85,6 +85,6 @@ Audit: 2026-10-10 — verificat cu Playwright și axe-core (WCAG 2.1 AA, ambele 
 
 Alexio — Alexandru-Ionuț Chiuță, contact: alexio@trom.tf. Aplicația menționează Atlantykron, Editura Tornada și Centrul StrING.
 
-## English summary
+## Rezumat
 
-An atlas of 25 draughts/checkers variants plus 12 lexicon entries, with local AI opponents (alpha-beta search) for playable variants. Single HTML file, Romanian interface, no external requests; theme and explored variants are stored in localStorage (`dff_` prefix). Since 1.1.0: a "Game table" with two-player online play over WebRTC (manual signalling, no server), a simple local analyzer, a deterministic daily puzzle, "why can't I move?" explanations, keyboard play with spoken announcements, and a local Elo tournament. Licensed MIT (see LICENSE).
+Un atlas cu 25 de variante de dame, plus 12 intrări de lexicon, cu adversari AI locali (căutare alfa-beta) pentru variantele jucabile. Un singur fișier HTML, interfață în română, fără cereri externe; tema și variantele explorate se păstrează în localStorage (prefix `dff_`). Din 1.1.0: o „Masă de joc” cu joc online în doi prin WebRTC (semnalizare manuală, fără server), un analizor local simplu, un puzzle zilnic determinist, explicații „de ce nu pot muta?”, joc cu tastatura cu anunțuri vocale și un turneu Elo local. Licență MIT (vezi LICENSE).
