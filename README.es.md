@@ -85,6 +85,6 @@ Auditoría: 2026-10-10 — verificado con Playwright y axe-core (WCAG 2.1 AA, am
 
 Alexio — Alexandru-Ionuț Chiuță, contacto: alexio@trom.tf. La aplicación menciona Atlantykron, Editura Tornada y Centrul StrING.
 
-## Resumen en inglés
+## Resumen
 
 Un atlas de 25 variantes del juego de damas más 12 entradas de léxico, con adversarios IA locales (búsqueda alfa-beta) para las variantes jugables. Un único archivo HTML, interfaz en rumano, sin solicitudes externas; el tema y las variantes exploradas se guardan en localStorage (prefijo `dff_`). Desde la 1.1.0: una «Mesa de juego» con partida de dos en línea mediante WebRTC (señalización manual, sin servidor), un analizador local sencillo, un problema diario determinista, explicaciones «¿por qué no puedo mover?», juego con teclado con anuncios hablados y un torneo Elo local. Licencia MIT (véase LICENSE).
