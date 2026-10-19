@@ -10,7 +10,7 @@ Atlante delle varianti della dama, con motori di gioco locali — in un unico fi
 
 **Applicazione online:** https://chiuta.github.io/Dame-fara-frontiere/
 
-![Schermata](screenshot.png)
+![Schermata](screenshot.it.png)
 
 ## Che cos'è
 

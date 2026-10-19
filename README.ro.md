@@ -10,7 +10,7 @@ Atlas al variantelor de dame, cu motoare de joc locale — într-un singur fiși
 
 **Live:** https://chiuta.github.io/Dame-fara-frontiere/
 
-![Captura de ecran](screenshot.png)
+![Captura de ecran](screenshot.ro.png)
 
 ## Ce este
 

@@ -10,7 +10,7 @@ An atlas of draughts/checkers variants, with local game engines — in a single 
 
 **Live app:** https://chiuta.github.io/Dame-fara-frontiere/
 
-![Screenshot](screenshot.png)
+![Screenshot](screenshot.en.png)
 
 ## What it is
 

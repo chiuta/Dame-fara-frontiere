@@ -10,7 +10,7 @@ A dámajáték változatainak atlasza, helyi játékmotorokkal — egyetlen HTML
 
 **Online alkalmazás:** https://chiuta.github.io/Dame-fara-frontiere/
 
-![Képernyőkép](screenshot.png)
+![Képernyőkép](screenshot.hu.png)
 
 ## Mi ez
 

@@ -10,7 +10,7 @@ Atlas der Dame-Varianten, mit lokalen Spiel-Engines — in einer einzigen HTML-D
 
 **Online-App:** https://chiuta.github.io/Dame-fara-frontiere/
 
-![Screenshot](screenshot.png)
+![Screenshot](screenshot.de.png)
 
 ## Was es ist
 

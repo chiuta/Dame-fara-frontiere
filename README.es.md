@@ -10,7 +10,7 @@ Atlas de las variantes del juego de damas, con motores de juego locales — en u
 
 **Aplicación en línea:** https://chiuta.github.io/Dame-fara-frontiere/
 
-![Captura de pantalla](screenshot.png)
+![Captura de pantalla](screenshot.es.png)
 
 ## Qué es
 
