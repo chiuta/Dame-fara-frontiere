@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · **Português** · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versão:** 1.2.4 · **Última atualização:** 2026-10-22
+**Versão:** 1.2.5 · **Última atualização:** 2026-10-22
 
 Idiomas da interface: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -65,6 +65,7 @@ Licença MIT — ver o ficheiro `LICENSE`. O cabeçalho de `index.html` e o text
 
 ## Histórico / Changelog
 
+- 1.2.5 — 2026-10-22: fff-kit 1.1.4: alvos de toque e tamanho mínimo do texto
 - 1.2.4 — 2026-10-22: fff-kit 1.1.2: PBKDF2 600 000 iterações, proteção anti-clickjacking
 - 1.2.3 — 2026-10-22: melhorias para telemóvel e acessibilidade: texto de pelo menos 12 px e áreas táteis de pelo menos 24 px. foco de teclado visível em todos os controlos.
 - 1.1.0 — 2026-10-14 (ronda 8, C1a): Mesa de jogo — jogo a dois P2P, analisador local, desafio do dia, «porque não posso jogar?», teclado + anúncios áudio, torneio Elo local; kit FFF (core, label, bundle, qr, p2p, tts) com `app.json`; CSP: `script-src` com hashes recalculados (+ `blob:` como habitual para o kit); testes `tests/fff-r8.test.mjs`.

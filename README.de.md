@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version:** 1.2.4 · **Zuletzt aktualisiert:** 2026-10-22
+**Version:** 1.2.5 · **Zuletzt aktualisiert:** 2026-10-22
 
 Oberflächensprachen: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -65,6 +65,7 @@ MIT-Lizenz — siehe Datei `LICENSE`. Der Kopf von `index.html` und der Text der
 
 ## Verlauf / Changelog
 
+- 1.2.5 — 2026-10-22: fff-kit 1.1.4: Touch-Ziele und Mindestschriftgröße
 - 1.2.4 — 2026-10-22: fff-kit 1.1.2: PBKDF2 mit 600.000 Iterationen, Schutz vor Clickjacking
 - 1.2.3 — 2026-10-22: Feinschliff für Mobilgeräte und Barrierefreiheit: Text mit mindestens 12 px und Touch-Ziele von mindestens 24 px. sichtbarer Tastaturfokus bei jedem Steuerelement.
 - 1.1.0 — 2026-10-14 (Runde 8, C1a): Spieltisch — P2P-Spiel zu zweit, lokaler Analysator, Tagesaufgabe, „Warum kann ich nicht ziehen?“, Tastatur + Audioansagen, lokales Elo-Turnier; FFF-Kit (core, label, bundle, qr, p2p, tts) mit `app.json`; CSP: `script-src` mit neu berechneten Hashes (+ `blob:` wie üblich für das Kit); Tests `tests/fff-r8.test.mjs`.
