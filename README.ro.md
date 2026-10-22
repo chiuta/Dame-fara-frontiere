@@ -2,7 +2,7 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune:** 1.2.2 · **Ultima actualizare:** 2026-10-19
+**Versiune:** 1.2.3 · **Ultima actualizare:** 2026-10-22
 
 Limbile interfeței: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -65,6 +65,7 @@ Licență MIT — vezi fișierul `LICENSE`. Antetul din `index.html` și textul 
 
 ## Istoric / Changelog
 
+- 1.2.3 — 2026-10-22: finisaje pentru mobil și accesibilitate: text de cel puțin 12 px și ținte tactile de cel puțin 24 px. focus de tastatură vizibil pe orice control.
 - 1.1.0 — 2026-10-14 (runda 8, C1a): Masa de joc — joc în doi P2P, analizor local, provocarea zilei, „de ce nu pot muta?”, tastatură + anunțuri audio, turneu Elo local; kit FFF (core, label, bundle, qr, p2p, tts) cu `app.json`; CSP: `script-src` cu hash-uri recalculate (+ `blob:` ca de obicei pentru kit); teste `tests/fff-r8.test.mjs`.
 - 1.0.0 — 2026-10-12: versiunea și data ultimei actualizări sunt afișate în aplicație
 - Runda 7: tabla în tema întunecată are acum pătrate clar distincte (contrast ≈ 3:1) și piese negre cu contur deschis; în Damath operatorii (+ − × ÷) și valorile de pe piese, precum și literele pieselor din Cheskers, erau scrise cu ~4,5 px și acum se scalează cu dimensiunea tablei (≈ 13–22 px); titlurile din ferestre (Reguli cheie, Date rapide, Scurtături etc.) sunt `h3` (ierarhie corectă, axe `heading-order`); butonul „Joacă împotriva AI” și selectorul „Albe/Negre” respectă contrastul în tema luminoasă; tema implicită urmează `prefers-color-scheme` când nu există o alegere salvată.

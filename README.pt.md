@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · **Português** · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versão:** 1.2.2 · **Última atualização:** 2026-10-19
+**Versão:** 1.2.3 · **Última atualização:** 2026-10-22
 
 Idiomas da interface: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -65,6 +65,7 @@ Licença MIT — ver o ficheiro `LICENSE`. O cabeçalho de `index.html` e o text
 
 ## Histórico / Changelog
 
+- 1.2.3 — 2026-10-22: melhorias para telemóvel e acessibilidade: texto de pelo menos 12 px e áreas táteis de pelo menos 24 px. foco de teclado visível em todos os controlos.
 - 1.1.0 — 2026-10-14 (ronda 8, C1a): Mesa de jogo — jogo a dois P2P, analisador local, desafio do dia, «porque não posso jogar?», teclado + anúncios áudio, torneio Elo local; kit FFF (core, label, bundle, qr, p2p, tts) com `app.json`; CSP: `script-src` com hashes recalculados (+ `blob:` como habitual para o kit); testes `tests/fff-r8.test.mjs`.
 - 1.0.0 — 2026-10-12: a versão e a data da última atualização são apresentadas na aplicação
 - Ronda 7: o tabuleiro no tema escuro tem agora casas claramente distintas (contraste ≈ 3:1) e peças pretas com contorno claro; em Damath os operadores (+ − × ÷) e os valores nas peças, bem como as letras das peças de Cheskers, estavam escritos a ~4,5 px e agora escalam com o tamanho do tabuleiro (≈ 13–22 px); os títulos nas janelas (Regras-chave, Dados rápidos, Atalhos, etc.) são `h3` (hierarquia correta, axe `heading-order`); o botão «Jogar contra a IA» e o seletor «Brancas/Pretas» respeitam o contraste no tema claro; o tema predefinido segue `prefers-color-scheme` quando não há uma escolha guardada.

@@ -2,7 +2,7 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version:** 1.2.2 · **Last updated:** 2026-10-19
+**Version:** 1.2.3 · **Last updated:** 2026-10-22
 
 Interface languages: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -65,6 +65,7 @@ MIT License — see the `LICENSE` file. The header in `index.html` and the text 
 
 ## History / Changelog
 
+- 1.2.3 — 2026-10-22: mobile and accessibility polish: text at least 12 px and touch targets at least 24 px. visible keyboard focus on every control.
 - 1.1.0 — 2026-10-14 (round 8, C1a): Game table — two-player P2P game, local analyser, daily challenge, "why can't I move?", keyboard + audio announcements, local Elo tournament; FFF kit (core, label, bundle, qr, p2p, tts) with `app.json`; CSP: `script-src` with recalculated hashes (+ `blob:` as usual for the kit); tests `tests/fff-r8.test.mjs`.
 - 1.0.0 — 2026-10-12: the version and the date of the last update are shown in the app
 - Round 7: the board in the dark theme now has clearly distinct squares (contrast ≈ 3:1) and black pieces with a light outline; in Damath the operators (+ − × ÷) and the values on the pieces, as well as the piece letters in Cheskers, were written at ~4.5 px and are now scaled with the board size (≈ 13–22 px); the headings in the windows (Key rules, Quick facts, Shortcuts etc.) are `h3` (correct hierarchy, axe `heading-order`); the "Play against AI" button and the "White/Black" selector respect contrast in the light theme; the default theme follows `prefers-color-scheme` when there is no saved choice.

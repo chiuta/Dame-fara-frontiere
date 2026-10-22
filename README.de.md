@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version:** 1.2.2 · **Zuletzt aktualisiert:** 2026-10-19
+**Version:** 1.2.3 · **Zuletzt aktualisiert:** 2026-10-22
 
 Oberflächensprachen: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -65,6 +65,7 @@ MIT-Lizenz — siehe Datei `LICENSE`. Der Kopf von `index.html` und der Text der
 
 ## Verlauf / Changelog
 
+- 1.2.3 — 2026-10-22: Feinschliff für Mobilgeräte und Barrierefreiheit: Text mit mindestens 12 px und Touch-Ziele von mindestens 24 px. sichtbarer Tastaturfokus bei jedem Steuerelement.
 - 1.1.0 — 2026-10-14 (Runde 8, C1a): Spieltisch — P2P-Spiel zu zweit, lokaler Analysator, Tagesaufgabe, „Warum kann ich nicht ziehen?“, Tastatur + Audioansagen, lokales Elo-Turnier; FFF-Kit (core, label, bundle, qr, p2p, tts) mit `app.json`; CSP: `script-src` mit neu berechneten Hashes (+ `blob:` wie üblich für das Kit); Tests `tests/fff-r8.test.mjs`.
 - 1.0.0 — 2026-10-12: Version und Datum der letzten Aktualisierung werden in der App angezeigt
 - Runde 7: Das Brett im dunklen Design hat nun deutlich unterscheidbare Felder (Kontrast ≈ 3:1) und schwarze Figuren mit hellem Rand; in Damath waren die Operatoren (+ − × ÷) und die Werte auf den Figuren sowie die Buchstaben der Figuren in Cheskers mit ~4,5 px geschrieben und skalieren jetzt mit der Brettgröße (≈ 13–22 px); die Überschriften in den Fenstern (Schlüsselregeln, Kurzdaten, Kürzel usw.) sind `h3` (korrekte Hierarchie, axe `heading-order`); die Schaltfläche „Gegen KI spielen“ und die Auswahl „Weiß/Schwarz“ halten den Kontrast im hellen Design ein; das Standarddesign folgt `prefers-color-scheme`, wenn keine gespeicherte Wahl vorliegt.

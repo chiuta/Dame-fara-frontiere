@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · **Magyar**
 
-**Verzió:** 1.2.2 · **Utolsó frissítés:** 2026-10-19
+**Verzió:** 1.2.3 · **Utolsó frissítés:** 2026-10-22
 
 A felület nyelvei: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -65,6 +65,7 @@ MIT-licenc — lásd a `LICENSE` fájlt. Az `index.html` fejléce és a felület
 
 ## Előzmények / Changelog
 
+- 1.2.3 — 2026-10-22: mobil és kisegítő finomítások: legalább 12 px-es szöveg és legalább 24 px-es érintési felületek. látható billentyűzetfókusz minden vezérlőn.
 - 1.1.0 — 2026-10-14 (8. kör, C1a): Játékasztal — kétszemélyes P2P-játék, helyi elemző, a nap kihívása, „miért nem léphetek?”, billentyűzet + hangos bejelentések, helyi Elo-verseny; FFF-készlet (core, label, bundle, qr, p2p, tts) `app.json`-nal; CSP: `script-src` újraszámolt hash-ekkel (+ `blob:` a készlethez szokás szerint); tesztek: `tests/fff-r8.test.mjs`.
 - 1.0.0 — 2026-10-12: a verzió és az utolsó frissítés dátuma megjelenik az alkalmazásban
 - 7. kör: a tábla sötét témában mostantól jól elkülönülő mezőkkel (kontraszt ≈ 3:1) és világos körvonalú fekete bábukkal rendelkezik; a Damathban az operátorok (+ − × ÷) és a bábukon lévő értékek, valamint a Cheskers bábuinak betűi ~4,5 px-esek voltak, most a tábla méretével skálázódnak (≈ 13–22 px); az ablakok címsorai (Kulcsszabályok, Gyors adatok, Billentyűparancsok stb.) `h3` elemek (helyes hierarchia, axe `heading-order`); a „Játék MI ellen” gomb és a „Világos/Sötét” választó világos témában is betartja a kontrasztot; az alapértelmezett téma a `prefers-color-scheme` értéket követi, ha nincs mentett választás.

@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · **Italiano** · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versione:** 1.2.2 · **Ultimo aggiornamento:** 2026-10-19
+**Versione:** 1.2.3 · **Ultimo aggiornamento:** 2026-10-22
 
 Lingue dell'interfaccia: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -65,6 +65,7 @@ Licenza MIT — vedi il file `LICENSE`. L'intestazione di `index.html` e il test
 
 ## Cronologia / Changelog
 
+- 1.2.3 — 2026-10-22: rifiniture per mobile e accessibilità: testo di almeno 12 px e aree tattili di almeno 24 px. focus da tastiera visibile su ogni controllo.
 - 1.1.0 — 2026-10-14 (giro 8, C1a): Tavolo da gioco — partita in due P2P, analizzatore locale, sfida del giorno, «perché non posso muovere?», tastiera + annunci audio, torneo Elo locale; kit FFF (core, label, bundle, qr, p2p, tts) con `app.json`; CSP: `script-src` con hash ricalcolati (+ `blob:` come di consueto per il kit); test `tests/fff-r8.test.mjs`.
 - 1.0.0 — 2026-10-12: la versione e la data dell'ultimo aggiornamento sono mostrate nell'applicazione
 - Giro 7: la scacchiera nel tema scuro ha ora caselle chiaramente distinte (contrasto ≈ 3:1) e pezzi neri con contorno chiaro; in Damath gli operatori (+ − × ÷) e i valori sui pezzi, così come le lettere dei pezzi di Cheskers, erano scritti a ~4,5 px e ora si ridimensionano con la dimensione della scacchiera (≈ 13–22 px); i titoli nelle finestre (Regole chiave, Dati rapidi, Scorciatoie ecc.) sono `h3` (gerarchia corretta, axe `heading-order`); il pulsante «Gioca contro l'IA» e il selettore «Bianchi/Neri» rispettano il contrasto nel tema chiaro; il tema predefinito segue `prefers-color-scheme` quando non c'è una scelta salvata.
