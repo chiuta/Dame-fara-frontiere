@@ -12,9 +12,11 @@
     "serviceWorker",
     "localStorage"
   ],
-  "storageKeys": [],
-  "sizeBytes": 720783,
-  "sha256": "c4cda18fa9a2ec06936c49de0cfc49e543b866fc44ee90db84d14c04bafe4f83",
+  "storageKeys": [
+    "dff_"
+  ],
+  "sizeBytes": 720789,
+  "sha256": "3fde8c5e126205ecd36e30dbf7aae337e82e7301932b014a225ee6998a198b78",
   "csp": {
     "present": true,
     "directives": {
