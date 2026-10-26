@@ -2,7 +2,7 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune:** 1.2.8 · **Ultima actualizare:** 2026-10-26
+**Versiune:** 2.0.0 · **Ultima actualizare:** 2026-10-26
 
 Limbile interfeței: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -75,6 +75,12 @@ Licență MIT — vezi fișierul `LICENSE`. Antetul din `index.html` și textul 
 - Căutarea ignoră diacriticele, acceptă mai multe cuvinte (toate trebuie să apară), ordonează rezultatele cu potriviri în titlu primele și ascunde rafturile „Varianta de astăzi / Esențiale / Exotice” cât timp căutarea e activă; contorul arată „N din 37 intrări”.
 - Bara de căutare și filtre este reper `role="search"`, iar widgetul de sprijin este `complementary`; axe-core: 0 violări la 1280 și 360 px.
 - Analiza de partide: din 1.1.0 există un analizor local simplu (vezi „Funcții noi”); rămâne didactic, nu pentru analiză profesionistă.
+
+## Funcții noi (2.0.0)
+
+- **Antrenor de tactică** (masa de joc, fila „Antrenor”): exerciții generate local și determinist pentru 12 variante, pe 3 niveluri (câștig clar de material, avantaj clar, mutare „liniștită” care nu e cea evidentă). Progresul și statistica rămân doar pe dispozitiv.
+- **Greșelile din analiză devin exerciții**: după „Analizează întreaga partidă”, fiecare gafă/greșeală/imprecizie are butonul „Reia ca exercițiu”, iar mutarea mai bună o încerci pe poziția reală din partidă.
+- Verificarea folosește căutare de adâncime mică în motorul local; exercițiile nu sunt probleme compuse de maeștri.
 
 ## Mărci
 
