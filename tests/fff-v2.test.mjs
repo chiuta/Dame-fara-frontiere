@@ -117,7 +117,7 @@ console.log("4. greșelile din analiză → exerciții");
   check("partidă de probă construită", made >= 10, made);
   await hub(page, 1);
   await page.click("text=Analizează întreaga partidă");
-  await page.waitForSelector(".rv-retry", {timeout: 600000});
+  await page.waitForSelector(".rv-retry", {timeout: 300000});
   const nb = await page.locator(".rv-retry").count();
   check("fiecare greșeală are buton «Reia ca exercițiu»", nb >= 1, nb);
   await page.locator(".rv-retry").first().click();

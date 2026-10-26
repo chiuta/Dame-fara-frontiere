@@ -21,6 +21,15 @@ export async function launch({w = 1280, h = 800, args = [], perm = [], bypassCSP
   await ctx.route(/^https?:/, r => r.abort());
   const page = await ctx.newPage();
   page.setDefaultTimeout(120000); // CI lent/încărcat: așteptările pe condiție au margine largă
+  // la depășirea unei așteptări: mesaj „FAIL …” cu condiția și starea paginii (CI nu arată logurile, doar adnotările)
+  for (const m of ["waitForFunction", "waitForSelector"]) {
+    const orig = page[m].bind(page);
+    page[m] = async (...a) => { try { return await orig(...a); } catch (e) {
+      if (!/Timeout/.test(String(e))) throw e;
+      let diag = ""; try { diag = await page.evaluate(() => JSON.stringify({puzzle: window.__dame8 && window.__dame8.P() && window.__dame8.P().puzzle && window.__dame8.P().puzzle.kind, ok: (document.querySelector(".c1a-ok") || {}).textContent, status: (document.querySelector("[role=status]") || {}).textContent, retry: document.querySelectorAll(".rv-retry").length})); } catch (x) { diag = "?"; }
+      throw new Error("FAIL așteptare depășită: " + m + " " + String(a[0]).replace(/\s+/g, " ").slice(0, 110) + " :: " + diag);
+    } };
+  }
   const st = {errs: [], net: [], csp: []};
   page.on("pageerror", e => st.errs.push(String(e)));
   page.on("console", m => { if (m.type() === "error") st.errs.push("console:" + m.text()); });
