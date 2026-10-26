@@ -108,7 +108,12 @@ console.log("4. greșelile din analiză → exerciții");
     P.snaps = [{board: P.board.slice(), side: P.side, clock: 0, ml: 0}]; P.moves = [];
     for (let i = 0; i < 16; i++) {
       const ms = P.eng.genMoves(P.board, P.rules, P.side); if (!ms.length) break;
-      const mv = ms[Math.floor(rnd() * ms.length)];
+      // albele joacă, când pot, mutări care lasă o piesă la mutare (greșeli reale), negrele mutări sigure: analiza găsește greșeli la orice viteză a mașinii
+      const opp = P.side === "w" ? "b" : "w";
+      const hangs = m => P.eng.genMoves(P.eng.applyMove(P.board, P.rules, m), P.rules, opp).some(x => x.caps && x.caps.length > 0);
+      const pool = ms.filter(m => P.side === "w" ? hangs(m) : !hangs(m));
+      const pick = pool.length ? pool : ms;
+      const mv = pick[Math.floor(rnd() * pick.length)];
       P.moves.push(mv.path.join("-")); P.board = P.eng.applyMove(P.board, P.rules, mv); P.side = P.side === "w" ? "b" : "w";
       P.snaps.push({board: P.board.slice(), side: P.side, clock: i + 1, ml: P.moves.length});
     }
