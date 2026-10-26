@@ -20,6 +20,7 @@ export async function launch({w = 1280, h = 800, args = [], perm = [], bypassCSP
   const ctx = await browser.newContext({locale: "ro-RO", viewport: {width: w, height: h}, bypassCSP, permissions: perm, colorScheme, reducedMotion, acceptDownloads: true});
   await ctx.route(/^https?:/, r => r.abort());
   const page = await ctx.newPage();
+  page.setDefaultTimeout(120000); // CI lent/încărcat: așteptările pe condiție au margine largă
   const st = {errs: [], net: [], csp: []};
   page.on("pageerror", e => st.errs.push(String(e)));
   page.on("console", m => { if (m.type() === "error") st.errs.push("console:" + m.text()); });
