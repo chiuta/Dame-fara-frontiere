@@ -2,7 +2,7 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune:** 2.1.0 · **Ultima actualizare:** 2026-10-27
+**Versiune:** 2.2.0 · **Ultima actualizare:** 2026-10-27
 
 **Stare:** stabilă; recenzia din 2026-10-27 aplicată (vezi CHANGELOG.md); modul multiplayer local unificat este **planificat**, neimplementat · **Offline:** complet (fără cereri de rețea)
 
@@ -23,6 +23,8 @@ Dame fără frontiere este un atlas interactiv al familiei de jocuri de dame (re
 - 25 de variante (internațională, englezească, braziliană, rusească, canadiană, italiană, spaniolă, portugheză, cehă, germană, pool, varianta uzuală RO, thailandeză, turcească, frizonă, armenească, Dameo, Croda, Lasca, Bașni, Cheskers, Damath, antidame, antidame internațională, dame diagonală) și 12 intrări de lexicon (damă, captură obligatorie, captură maximă, damă zburătoare, notație numerică, FMJD, promovare etc.).
 - Căutare, sortare (ordine recomandată, titlu A→Z / Z→A, dificultate crescătoare / descrescătoare), filtre „Doar jucabile” și „Începători”, „Varianta de astăzi” (aleasă determinist după dată), „Surprinde-mă”.
 - Joc local „Joacă local · vs AI”: alegi culoarea (Albe / Negre) și nivelul (Ușor / Mediu / Avansat), cu „Joc nou”, „Anulează”, „Indiciu” și „Mod relaxat” (captură neobligatorie).
+- **Statistici locale** contra AI: victorii / remize / înfrângeri, separat pe variantă și pe nivel (Ușor/Mediu/Avansat), afișate sub tablă. Se păstrează doar în `localStorage` pe acest dispozitiv (cu try/catch; fără ele aplicația funcționează). Nu se numără partidele în doi, online, de turneu sau exercițiile.
+- **Nivelurile AI sunt reale (verificat prin simulare)**: `tests/niveluri-sim.test.mjs` rulează 50 de partide AI-vs-AI pe pereche (englez/rus/brazilian, culori alternate): Mediu bate Ușor 50–0 (z=7,07), Avansat bate Ușor 49–0 cu 1 remiză (z=7). Rezultatul este despre aceste 3 variante, nu o garanție pentru toate variantele.
 - „⧉ Copiază partida” și „⤓ Salvează .txt” în fereastra de joc: antet (variantă, tablă, nivel, rezultat) și mutările în notație pe coordonate (nu PDN oficial); generate local.
 - Motoare locale: generic parametrizat, de turnuri (Bașni, Lasca), de scor aritmetic (Damath) și hibrid șah×dame (Cheskers), cu căutare alpha-beta. Aplicația avertizează cu ⚠ variantele implementate aproximativ.
 - Export CSV al listei și citare BibTeX.

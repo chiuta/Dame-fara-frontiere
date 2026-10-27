@@ -2,7 +2,7 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version:** 2.1.0 · **Last updated:** 2026-10-27
+**Version:** 2.2.0 · **Last updated:** 2026-10-27
 
 **Status:** stable; review 2026-10-27 applied (see CHANGELOG.md); unified local multiplayer is **planned**, not yet implemented · **Offline:** complete (no network requests)
 
@@ -23,6 +23,8 @@ Dame fără frontiere ("Draughts without borders") is an interactive atlas of th
 - 25 variants (international, English, Brazilian, Russian, Canadian, Italian, Spanish, Portuguese, Czech, German, pool, the usual RO variant, Thai, Turkish, Frisian, Armenian, Dameo, Croda, Lasca, Bashni, Cheskers, Damath, anti-draughts, international anti-draughts, diagonal draughts) and 12 lexicon entries (king, mandatory capture, majority capture, flying king, numeric notation, FMJD, promotion etc.).
 - Search, sorting (recommended order, title A→Z / Z→A, difficulty ascending / descending), the "Playable only" and "Beginners" filters, "Today's variant" (chosen deterministically by date), "Surprise me".
 - Local game "Play locally · vs AI": you choose the colour (White / Black) and the level (Easy / Medium / Advanced), with "New game", "Undo", "Hint" and "Relaxed mode" (non-mandatory capture).
+- **Local statistics** against the AI: wins / draws / losses, separately per variant and per level (Easy/Medium/Advanced), shown under the board. Stored only in `localStorage` on this device (with try/catch; the app works without it). Two-player, online, tournament games and exercises are not counted.
+- **AI levels are real (verified by simulation)**: `tests/niveluri-sim.test.mjs` plays 50 AI-vs-AI games per pairing (English/Russian/Brazilian, alternating colours): Medium beats Easy 50–0 (z=7.07), Advanced beats Easy 49–0 with 1 draw (z=7). This concerns those 3 variants only, not a guarantee for all variants.
 - "⧉ Copy the game" and "⤓ Save .txt" in the game window: a header (variant, board, level, result) and the moves in coordinate notation (not official PDN); generated locally.
 - Local engines: generic parameterised, tower-based (Bashni, Lasca), arithmetic-score (Damath) and a chess×draughts hybrid (Cheskers), with alpha-beta search. The app warns with ⚠ about variants implemented approximately.
 - CSV export of the list and BibTeX citation.
