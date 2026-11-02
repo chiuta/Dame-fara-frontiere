@@ -1,5 +1,11 @@
 # Jurnal de modificări
 
+## 2.2.0 — 2026-11-02 (reîmprospătare kit)
+
+- Nou (kit): **Sincronizare între dispozitive** (`FFF.sync`) — în dialogul «Transparență» (clic pe versiune → Copie de siguranță): conectezi două dispozitive direct (WebRTC, cod/QR, fără server și fără cont) și își schimbă datele aplicației; cea mai recentă valoare câștigă, secretele (chei API, parole) nu se trimit, ștergerile nu se propagă. Aplicarea trece prin importul kitului (confirmare, chei permise, rollback).
+- Nou (kit): **Istoric local — «mașina timpului»** (`FFF.history`) — instantanee automate ale datelor (IndexedDB, fără secrete), diferență față de starea curentă și restaurare reversibilă; «Șterge datele aplicației» șterge și istoricul.
+- Module adăugate: `qr`, `p2p`, `sync`, `history` (+~140 KB). Versiunea aplicației nu se schimbă.
+
 ## 2.2.0 — 2026-10-27 (anterior: v2.1.0)
 
 Recenzie 2 (2026-10-27).
@@ -7,7 +13,7 @@ Recenzie 2 (2026-10-27).
 ### Implementat
 - Statistici locale victorii / remize / înfrângeri contra AI, pe variantă și pe nivel, în `localStorage` (cu try/catch), afișate sub tablă; texte RO+EN (celelalte limbi folosesc textul EN). Nu se numără jocul în doi, online, turneul și exercițiile.
 - Test nou `tests/statistici.test.mjs` (9 verificări).
-- Test nou `tests/niveluri-sim.test.mjs`: simulare AI-vs-AI, N=50 pe pereche (englez/rus/brazilian, culori alternate). Mediu vs Ușor: 50–0 (z=7,07); Avansat vs Ușor: 49–0, 1 remiză (z=7). Nivelurile existente diferă real; testul nu a fost extins la toate variantele.
+- Test nou `tools/niveluri-sim.mjs`: simulare AI-vs-AI, N=50 pe pereche (englez/rus/brazilian, culori alternate). Mediu vs Ușor: 50–0 (z=7,07); Avansat vs Ușor: 49–0, 1 remiză (z=7). Nivelurile existente diferă real; testul nu a fost extins la toate variantele.
 
 ### Neimplementat și de ce
 - Reguli noi sau surse pentru variantele ⚠: neschimbate; nu s-au putut verifica din ≥2 surse în această rundă, deci nu au fost inventate.

@@ -15,8 +15,8 @@
   "storageKeys": [
     "dff_"
   ],
-  "sizeBytes": 744139,
-  "sha256": "bf219e73ffe1019d7534bf4072e919cfd59b417cf240299aad864d71a178c812",
+  "sizeBytes": 775460,
+  "sha256": "8d42d094d691ed878df32ddafcd3bd14810a85b452e9e6ff6fbb6435c077dec9",
   "csp": {
     "present": true,
     "directives": {
@@ -61,6 +61,8 @@
       "bundle",
       "qr",
       "p2p",
+      "sync",
+      "history",
       "tts"
     ]
   },
@@ -74,6 +76,8 @@
       "bundle",
       "qr",
       "p2p",
+      "sync",
+      "history",
       "tts"
     ]
   },

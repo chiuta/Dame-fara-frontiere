@@ -1,7 +1,7 @@
 // DAME FĂRĂ FRONTIERE: verificare prin simulare că nivelurile AI (1 Ușor, 2 Mediu, 3 Avansat) chiar diferă.
 // Motorul generic (window.DAME) se extrage din primul <script> al motorului și rulează în Node, fără browser.
 // Deschiderea: 4 mutări aleatoare (seed fix) pentru varietate; culorile se alternează. N >= 50 partide per pereche.
-// Durează (timp real de gândire al AI: ~0,5 s la Mediu, ~1,1 s la Avansat): ~10-40 min pentru N=50. Rulare: node tests/niveluri-sim.test.mjs [N] [variante separate prin virgulă] [perechi: 21,31]
+// Durează (timp real de gândire al AI: ~0,5 s la Mediu, ~1,1 s la Avansat): ~10-40 min pentru N=50. Rulare: node tools/niveluri-sim.mjs [N] [variante separate prin virgulă] [perechi: 21,31]
 import fs from "node:fs";
 import vm from "node:vm";
 import path from "node:path";
