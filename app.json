@@ -2,8 +2,8 @@
   "schema": 1,
   "slug": "dame-fara-frontiere",
   "name": "Dame fără frontiere — Atlas variante de dame",
-  "version": "2.2.1",
-  "updated": "2026-11-03",
+  "version": "2.2.2",
+  "updated": "2026-11-07",
   "description": "Atlas al jocului de dame: variante regionale, istorice, ortogonale si moderne. Toate variantele jucabile local impotriva unui AI didactic, prin patru motoare. 100% offline, zero dependente. Atelier Atlantykron - Centrul StrING.",
   "egress": [],
   "permissions": [
@@ -17,8 +17,8 @@
   "storageKeys": [
     "dff_"
   ],
-  "sizeBytes": 839144,
-  "sha256": "7f608aeea4d2c245cf8655f7dfe1d53ed431019e13966d84d944157c54e0ef6e",
+  "sizeBytes": 840750,
+  "sha256": "7ca8304387057153bd20dc545cfca9eec786dcea83839353bf9f2c3f592d2447",
   "csp": {
     "present": true,
     "directives": {
@@ -69,7 +69,7 @@
     ]
   },
   "kit": {
-    "version": "1.2.0",
+    "version": "1.2.1",
     "modules": [
       "core",
       "store",
